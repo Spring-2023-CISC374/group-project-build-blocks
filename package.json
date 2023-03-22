@@ -3,7 +3,6 @@
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
-	"homepage": "https://jiandong.wang/374-phaser3-mirror/dist/",
 	"scripts": {
     		"dev": "vite",
 		"build": "tsc && vite build",
