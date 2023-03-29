@@ -7,15 +7,20 @@ export default class BasicScene extends Phaser.Scene {
     public static readonly BACKGROUND_HORIZONTAL_CENTER = 400;
     public static readonly BACKGROUND_VERTICAL_CENTER = 300;
 
-    public static readonly GRID_START_BOTTOM = 0;
-    public static readonly GRID_START_LEFT = 0;
-    public static readonly GRID_WIDTH = 5;
-    public static readonly GRID_HEIGHT = 5;
+    public static readonly GRID_START_BOTTOM = 16;
+    public static readonly GRID_START_LEFT = 16;
+    public static readonly GRID_WIDTH = 10;
+    public static readonly GRID_HEIGHT = 10;
+    public static readonly GRID_SQUARE_SIZE = 32;
 
 
     /* SCENE VARIABLES */
+
+    //the background of the scene
     private background?: Phaser.GameObjects.Image
-    private gridSquares?: Phaser.GameObjects.Image[];
+    
+    //the 2D grid of the building area [x][y] with 0,0 being bottom left
+    private gridSquares?: Phaser.GameObjects.Image[][];
 
     /* ESSENTIAL FUNCTIONS */
     constructor() {
@@ -34,9 +39,15 @@ export default class BasicScene extends Phaser.Scene {
         this.background = this.add.image(BasicScene.BACKGROUND_HORIZONTAL_CENTER, BasicScene.BACKGROUND_VERTICAL_CENTER, 'background');
         this.background.setScale(BasicScene.BACKGROUND_WIDTH, BasicScene.BACKGROUND_HEIGHT);
 
-        const fred = this.add.image(400, 300, 'gridSquare');
+        //create the grid for the building area and store it in gridSquares
+        this.makeGrid(
+            BasicScene.GRID_WIDTH, 
+            BasicScene.GRID_HEIGHT, 
+            BasicScene.GRID_START_LEFT, 
+            BasicScene.GRID_START_BOTTOM, 
+            BasicScene.GRID_SQUARE_SIZE
+        );
 
-        this.gridSquares?.push(fred);
     }
 
     update(){
@@ -44,4 +55,29 @@ export default class BasicScene extends Phaser.Scene {
     }
 
     /* HELPER FUNCTIONS */
+
+    private makeGrid(numRows: number, numCols:number, startX: number, startY: number, squareSize: number) {
+        //BasicScene.GRID_START_LEFT === startX
+        //BasicScene.GRID_START_BOTTOM === startY
+        //BasicScene.GRID_WIDTH === numRows
+        //BasicScene.GRID_HEIGHT === numCols
+        //BasicScene.GRID_SQUARE_SIZE === squareSize
+
+        for (let x = 0; x < numRows; x++) {
+            
+            const newRow = [];
+            
+            for (let y = 0; y < numCols; y++) {
+                const newSquare = this.add.image(
+                    startX + squareSize*x, 
+                    (this.sys.game.canvas.height - startY) - squareSize*y, 
+                    'gridSquare'
+                );
+                
+                newRow.push(newSquare);
+            }
+
+            this.gridSquares?.push(newRow);
+        }
+    }
 }
