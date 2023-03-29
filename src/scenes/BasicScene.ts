@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import Crane from '../objects/Crane';
 import Crate from '../objects/Crate';
 
 export default class BasicScene extends Phaser.Scene {
@@ -11,7 +12,7 @@ export default class BasicScene extends Phaser.Scene {
     public static readonly GRID_START_BOTTOM = 16;
     public static readonly GRID_START_LEFT = 16;
     public static readonly GRID_WIDTH = 10;
-    public static readonly GRID_HEIGHT = 10;
+    public static readonly GRID_HEIGHT = 25;
     public static readonly GRID_SQUARE_SIZE = 32;
 
 
@@ -34,7 +35,10 @@ export default class BasicScene extends Phaser.Scene {
     preload() {
         this.load.image('background', '../public/assets/TempBackground.png');
         this.load.image('gridSquare', '../public/assets/GridSquare.png');
-        this.load.image('regCrate', '../public/assets/regCrate.png')
+
+        this.load.image('regCrate', '../public/assets/regCrate.png');
+        this.load.image('craneOpen', '../public/assets/CraneBasicRed.png');
+        this.load.image('craneClosed', '../public/assets/CraneBasicGreen.png');
 	}
 
     create() {
@@ -53,7 +57,14 @@ export default class BasicScene extends Phaser.Scene {
         );
         
         this.makeCrates();
+        
+        //const testCran = this.add.sprite(200, 200, 'craneOpen');
 
+        const crane = new Crane(this, 16, this.sys.game.canvas.height - 16 - 32*5, false);
+        crane.open();
+        this.time.delayedCall(2500, () => {crane.moveDown()});
+        //this.time.delayedCall(2900, () => {crane.moveDown()});
+        this.time.delayedCall(5000, () => {crane.moveDown()});
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
