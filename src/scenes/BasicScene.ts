@@ -56,6 +56,7 @@ export default class BasicScene extends Phaser.Scene {
 
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     update(){
 
     }
