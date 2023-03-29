@@ -62,9 +62,9 @@ export default class BasicScene extends Phaser.Scene {
 
         const crane = new Crane(this, 16, this.sys.game.canvas.height - 16 - 32*5, false);
         crane.open();
-        this.time.delayedCall(2500, () => {crane.moveDown()});
+        this.time.delayedCall(2500, () => {crane.moveRight()});
         //this.time.delayedCall(2900, () => {crane.moveDown()});
-        this.time.delayedCall(5000, () => {crane.moveDown()});
+        this.time.delayedCall(5000, () => {crane.moveLeft()});
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function

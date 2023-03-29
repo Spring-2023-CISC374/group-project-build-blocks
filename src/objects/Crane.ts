@@ -32,9 +32,32 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
 
     public moveDown() {
         if(!this.isMoving) {
-            console.log("moving!");
             this.isMoving = true;
             this.setVelocityY(Crane.MOVEMENT_VELOCITY);
+            this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
+        }
+    }
+    
+    public moveUp() {
+        if(!this.isMoving) {
+            this.isMoving = true;
+            this.setVelocityY(-Crane.MOVEMENT_VELOCITY);
+            this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
+        }
+    }
+    
+    public moveLeft() {
+        if(!this.isMoving) {
+            this.isMoving = true;
+            this.setVelocityX(-Crane.MOVEMENT_VELOCITY);
+            this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
+        }
+    }
+    
+    public moveRight() {
+        if(!this.isMoving) {
+            this.isMoving = true;
+            this.setVelocityX(Crane.MOVEMENT_VELOCITY);
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
     }
@@ -43,6 +66,5 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityY(0); 
         this.setVelocityX(0);
         this.isMoving = false;
-        console.log("done moving!");
     }
 }
