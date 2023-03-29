@@ -57,14 +57,26 @@ export default class BasicScene extends Phaser.Scene {
         );
         
         this.makeCrates();
-        
-        //const testCran = this.add.sprite(200, 200, 'craneOpen');
 
         const crane = new Crane(this, 16, this.sys.game.canvas.height - 16 - 32*5, false);
-        crane.open();
-        this.time.delayedCall(2500, () => {crane.moveRight()});
-        //this.time.delayedCall(2900, () => {crane.moveDown()});
-        this.time.delayedCall(5000, () => {crane.moveLeft()});
+
+
+        // TEMPORARY BUTTONS TO SHOW THAT CRANE MOVEMENT WORKS
+        const leftButton = this.add.text(500, 100, 'Move Left!');
+        leftButton.setInteractive();
+        leftButton.on('pointerup', () => {crane.moveLeft()});
+
+        const rightButton = this.add.text(500, 200, 'Move Right!');
+        rightButton.setInteractive();
+        rightButton.on('pointerup', () => {crane.moveRight()});
+
+        const upButton = this.add.text(500, 300, 'Move Up!');
+        upButton.setInteractive();
+        upButton.on('pointerup', () => {crane.moveUp()});
+
+        const downButton = this.add.text(500, 400, 'Move Down!');
+        downButton.setInteractive();
+        downButton.on('pointerup', () => {crane.moveDown()});
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
