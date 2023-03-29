@@ -15,7 +15,8 @@ export default class BasicScene extends Phaser.Scene {
 	}
 
     create() {
-
+        const background = this.add.image(400, 300, 'background');
+        background.setScale(800, 600);
     }
 
     update(){
