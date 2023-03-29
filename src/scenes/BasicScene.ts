@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import Crate from '../objects/Crate';
 
 export default class BasicScene extends Phaser.Scene {
     /* SCENE CONSTANTS */
@@ -16,6 +17,8 @@ export default class BasicScene extends Phaser.Scene {
 
     /* SCENE VARIABLES */
 
+    private crates?: Phaser.Physics.Arcade.Group
+
     //the background of the scene
     private background?: Phaser.GameObjects.Image
     
@@ -31,6 +34,7 @@ export default class BasicScene extends Phaser.Scene {
     preload() {
         this.load.image('background', '../public/assets/TempBackground.png');
         this.load.image('gridSquare', '../public/assets/GridSquare.png');
+        this.load.image('regCrate', '../public/assets/regCrate.png')
 	}
 
     create() {
@@ -47,6 +51,8 @@ export default class BasicScene extends Phaser.Scene {
             BasicScene.GRID_START_BOTTOM, 
             BasicScene.GRID_SQUARE_SIZE
         );
+        
+        this.makeCrates();
 
     }
 
@@ -57,11 +63,6 @@ export default class BasicScene extends Phaser.Scene {
     /* HELPER FUNCTIONS */
 
     private makeGrid(numRows: number, numCols:number, startX: number, startY: number, squareSize: number) {
-        //BasicScene.GRID_START_LEFT === startX
-        //BasicScene.GRID_START_BOTTOM === startY
-        //BasicScene.GRID_WIDTH === numRows
-        //BasicScene.GRID_HEIGHT === numCols
-        //BasicScene.GRID_SQUARE_SIZE === squareSize
 
         for (let x = 0; x < numRows; x++) {
             
@@ -79,5 +80,16 @@ export default class BasicScene extends Phaser.Scene {
 
             this.gridSquares?.push(newRow);
         }
+    }
+
+    private makeCrates() {
+        this.crates = this.physics.add.group({ collideWorldBounds: true });
+        const oneGuy = this.crates.create(16, 268, 'regCrate') as Crate;
+        oneGuy.refreshBody()
+        const twoGuy = this.crates.create(16, 300, 'regCrate') as Crate;
+        twoGuy.refreshBody();
+        
+        //makes crates collide with themselves
+        this.physics.add.collider(this.crates, this.crates)
     }
 }
