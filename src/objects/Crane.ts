@@ -9,6 +9,8 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     /* CRANE VARIABLES */
 
     private isMoving = false;
+    private clearX = 0;
+    private clearY = 0;
 
     constructor(scene:Phaser.Scene, x:number, y:number, startOpen:boolean) {
         if(startOpen) {
@@ -33,6 +35,8 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     public moveDown() {
         if(!this.isMoving) {
             this.isMoving = true;
+            this.clearX = this.x;
+            this.clearY = this.y + 32;
             this.setVelocityY(Crane.MOVEMENT_VELOCITY);
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
@@ -41,6 +45,8 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     public moveUp() {
         if(!this.isMoving) {
             this.isMoving = true;
+            this.clearX = this.x;
+            this.clearY = this.y - 32;
             this.setVelocityY(-Crane.MOVEMENT_VELOCITY);
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
@@ -49,6 +55,8 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     public moveLeft() {
         if(!this.isMoving) {
             this.isMoving = true;
+            this.clearX = this.x - 32;
+            this.clearY = this.y;
             this.setVelocityX(-Crane.MOVEMENT_VELOCITY);
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
@@ -57,6 +65,8 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     public moveRight() {
         if(!this.isMoving) {
             this.isMoving = true;
+            this.clearX = this.x + 32;
+            this.clearY = this.y;
             this.setVelocityX(Crane.MOVEMENT_VELOCITY);
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
@@ -65,6 +75,8 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     private clearMovement() {
         this.setVelocityY(0); 
         this.setVelocityX(0);
+        this.x = this.clearX;
+        this.y = this.clearY;
         this.isMoving = false;
     }
 }
