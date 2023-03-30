@@ -2,3 +2,6 @@
 # group-game-project
 
 This assignment is where you will submit your code for your MVP as well as the rest of the versions of your educational game.
+
+Michael Snead - Created the basic environment, the crane which can move around and pick up crates, and crates which can be picked up by the crane
+                (see basic-environment and basic-crane branches)
