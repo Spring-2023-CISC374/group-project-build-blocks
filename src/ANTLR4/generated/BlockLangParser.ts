@@ -12,6 +12,8 @@ import {
 	Interval, IntervalSet
 } from 'antlr4';
 import BlockLangListener from "./BlockLangListener.js";
+import BlockLangVisitor from "./BlockLangVisitor.js";
+
 // for running tests with parameters, TODO: discuss strategy for typed parameters in CI
 // eslint-disable-next-line no-unused-vars
 type int = number;
@@ -269,6 +271,14 @@ export class ProgramContext extends ParserRuleContext {
 	 		listener.exitProgram(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: BlockLangVisitor<Result>): Result {
+		if (visitor.visitProgram) {
+			return visitor.visitProgram(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -294,6 +304,14 @@ export class StatementContext extends ParserRuleContext {
 	public exitRule(listener: BlockLangListener): void {
 	    if(listener.exitStatement) {
 	 		listener.exitStatement(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: BlockLangVisitor<Result>): Result {
+		if (visitor.visitStatement) {
+			return visitor.visitStatement(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
@@ -326,6 +344,14 @@ export class LoopStatementContext extends ParserRuleContext {
 	 		listener.exitLoopStatement(this);
 		}
 	}
+	// @Override
+	public accept<Result>(visitor: BlockLangVisitor<Result>): Result {
+		if (visitor.visitLoopStatement) {
+			return visitor.visitLoopStatement(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
 }
 
 
@@ -345,6 +371,14 @@ export class MoveStatementContext extends ParserRuleContext {
 	public exitRule(listener: BlockLangListener): void {
 	    if(listener.exitMoveStatement) {
 	 		listener.exitMoveStatement(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: BlockLangVisitor<Result>): Result {
+		if (visitor.visitMoveStatement) {
+			return visitor.visitMoveStatement(this);
+		} else {
+			return visitor.visitChildren(this);
 		}
 	}
 }
