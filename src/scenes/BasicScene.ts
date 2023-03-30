@@ -19,6 +19,7 @@ export default class BasicScene extends Phaser.Scene {
     /* SCENE VARIABLES */
 
     private crates?: Phaser.Physics.Arcade.Group
+    private crane?: Crane;
 
     //the background of the scene
     private background?: Phaser.GameObjects.Image
@@ -39,6 +40,7 @@ export default class BasicScene extends Phaser.Scene {
         this.load.image('regCrate', '../public/assets/regCrate.png');
         this.load.image('craneOpen', '../public/assets/CraneBasicRed.png');
         this.load.image('craneClosed', '../public/assets/CraneBasicGreen.png');
+        this.load.image('cranePickupBox', '../public/assets/CranePickupBox.png')
 	}
 
     create() {
@@ -55,33 +57,57 @@ export default class BasicScene extends Phaser.Scene {
             BasicScene.GRID_START_BOTTOM, 
             BasicScene.GRID_SQUARE_SIZE
         );
+
+        this.crates = this.physics.add.group({ collideWorldBounds: true });
         
         this.makeCrates();
 
-        const crane = new Crane(this, 16, this.sys.game.canvas.height - 16 - 32*5, false);
+        this.crane = new Crane(this, 16, this.sys.game.canvas.height - 16 - 32*5, false,);
 
+        const cranColl = this.physics.add.collider(this.crane, this.crates);
+        cranColl.active = false;
+
+        this.time.delayedCall(5000, ()=>{cranColl.active = true});
 
         // TEMPORARY BUTTONS TO SHOW THAT CRANE MOVEMENT WORKS
         const leftButton = this.add.text(500, 100, 'Move Left!');
         leftButton.setInteractive();
-        leftButton.on('pointerup', () => {crane.moveLeft()});
+        leftButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveLeft()}});
 
-        const rightButton = this.add.text(500, 200, 'Move Right!');
+        const rightButton = this.add.text(500, 150, 'Move Right!');
         rightButton.setInteractive();
-        rightButton.on('pointerup', () => {crane.moveRight()});
+        rightButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveRight()}});
 
-        const upButton = this.add.text(500, 300, 'Move Up!');
+        const upButton = this.add.text(500, 200, 'Move Up!');
         upButton.setInteractive();
-        upButton.on('pointerup', () => {crane.moveUp()});
+        upButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveUp()}});
 
-        const downButton = this.add.text(500, 400, 'Move Down!');
+        const downButton = this.add.text(500, 250, 'Move Down!');
         downButton.setInteractive();
-        downButton.on('pointerup', () => {crane.moveDown()});
+        downButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveDown()}});
+
+        const grabButton = this.add.text(500, 300, 'Grab!');
+        grabButton.setInteractive();
+        grabButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.grab()}});
+
+        const releaseButton = this.add.text(500, 350, 'Release!');
+        releaseButton.setInteractive();
+        releaseButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.release()}});
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     update(){
-
+        if(this.crane !== undefined) {
+            if(!this.physics.overlap(this.crane.PICKUP_BOX, this.crates, (_box, crate) => {
+                    if(this.crane !== undefined) {
+                        this.crane.toGrab = crate as Phaser.Physics.Arcade.Sprite;
+                    }
+                }
+                )
+            ) {
+                this.crane.toGrab = undefined;
+            }
+        }
     }
 
     /* HELPER FUNCTIONS */

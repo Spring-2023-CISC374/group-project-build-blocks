@@ -6,12 +6,16 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     public static readonly MOVEMENT_TIME = 250; //time in milliseconds 
     public static readonly MOVEMENT_VELOCITY = 32 * 1000 / Crane.MOVEMENT_TIME; //speed to move at in units/second 32 units is one "block"
 
+    public static readonly PICKUP_BOX_OFFSET = 24;
+
     /* CRANE VARIABLES */
 
-    private isMoving = false;
+    public PICKUP_BOX: Phaser.Physics.Arcade.Sprite;
 
+    private isMoving = false;
     private isCarrying = false;
     private carriedObject?:Phaser.Physics.Arcade.Sprite;
+    public toGrab?: Phaser.Physics.Arcade.Sprite;
 
     constructor(scene:Phaser.Scene, x:number, y:number, startOpen:boolean) {
         if(startOpen) {
@@ -23,13 +27,25 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setGravity(0, -300);
+
+        this.PICKUP_BOX = new Phaser.Physics.Arcade.Sprite(scene, x, y + Crane.PICKUP_BOX_OFFSET, "cranePickupBox");
+        scene.add.existing(this.PICKUP_BOX);
+        scene.physics.add.existing(this.PICKUP_BOX);
+        this.PICKUP_BOX.setGravity(0, -300);
+
     }
 
-    public open() {
+    public release() {
         this.setTexture('craneOpen');
     }
 
-    public close() {
+    public grab() {
+        if(!this.isCarrying && this.toGrab !== undefined) {
+            this.isCarrying = true;
+            this.carriedObject = this.toGrab;
+            this.carriedObject?.setGravityY(-300);
+            console.log("grabbed");
+        }
         this.setTexture('craneClosed');
     }
 
@@ -37,6 +53,9 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         if(!this.isMoving) {
             this.isMoving = true;
             this.setVelocityY(Crane.MOVEMENT_VELOCITY);
+            if(this.carriedObject !== undefined) {
+                this.carriedObject.setVelocityY(Crane.MOVEMENT_VELOCITY)
+            }
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
     }
@@ -45,6 +64,9 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         if(!this.isMoving) {
             this.isMoving = true;
             this.setVelocityY(-Crane.MOVEMENT_VELOCITY);
+            if(this.carriedObject !== undefined) {
+                this.carriedObject.setVelocityY(-Crane.MOVEMENT_VELOCITY)
+            }
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
     }
@@ -53,6 +75,9 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         if(!this.isMoving) {
             this.isMoving = true;
             this.setVelocityX(-Crane.MOVEMENT_VELOCITY);
+            if(this.carriedObject !== undefined) {
+                this.carriedObject.setVelocityX(-Crane.MOVEMENT_VELOCITY)
+            }
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
     }
@@ -61,23 +86,37 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         if(!this.isMoving) {
             this.isMoving = true;
             this.setVelocityX(Crane.MOVEMENT_VELOCITY);
+            if(this.carriedObject !== undefined) {
+                this.carriedObject.setVelocityX(Crane.MOVEMENT_VELOCITY)
+            }
             this.scene.time.delayedCall(Crane.MOVEMENT_TIME, () => this.clearMovement());
         }
     }
 
     private clearMovement() {
+        //stop everything from moving
         this.setVelocityY(0); 
         this.setVelocityX(0);
-        console.log("before adjustments");
-        console.log(this.x);
-        console.log(this.y)
+        if(this.carriedObject !== undefined) {
+            this.carriedObject.setVelocityY(0);
+            this.carriedObject.setVelocityX(0);
+        }
+        
+        //snap crane to place
         this.x = Math.round((this.x-16)/32)*32 + 16;
         this.y = this.scene.sys.game.canvas.height - (Math.round(((this.scene.sys.game.canvas.height - this.y) - 16)/32)*32 + 16);
-
-        console.log("after adjustments");
-        console.log(this.x);
-        console.log(this.y);
-
+        
+        //snap pickup detector to place
+        this.PICKUP_BOX.x = this.x;
+        this.PICKUP_BOX.y = this.y + Crane.PICKUP_BOX_OFFSET;
+        
+        //snap carried object to place
+        if(this.carriedObject !== undefined) {
+            this.carriedObject.x = Math.round((this.carriedObject.x-16)/32)*32 + 16;
+            this.carriedObject.y = this.scene.sys.game.canvas.height - (Math.round(((this.scene.sys.game.canvas.height - this.carriedObject.y) - 16)/32)*32 + 16);
+        }
+        
         this.isMoving = false;
+        console.log(this.toGrab === undefined)
     }
 }
