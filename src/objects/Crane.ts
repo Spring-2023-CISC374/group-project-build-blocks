@@ -36,6 +36,12 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     }
 
     public release() {
+        if(this.isCarrying && this.carriedObject !== undefined) {
+            this.carriedObject.setGravityY(0);
+            this.carriedObject = undefined;
+            this.isCarrying = false;
+            console.log("released");
+        }
         this.setTexture('craneOpen');
     }
 
