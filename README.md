@@ -5,3 +5,5 @@ This assignment is where you will submit your code for your MVP as well as the r
 
 Michael Snead - Created the basic environment, the crane which can move around and pick up crates, and crates which can be picked up by the crane
                 (see basic-environment and basic-crane branches)
+
+JD Wang - Setup file structure, copied configs from first-phaser3-typescript project. Created a simple parser for our block programming language. The parser is made using ANTLR4. (see feat-file-structure and feat-code-parser)
