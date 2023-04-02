@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Text-Based Editor Demo</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.min.js"
+		integrity="sha512-4T3GMbqlA/8FAPZRSo/JbV6RNL4s/XkV86vNHzuHPHPeqKJWbV3Sp5KicgK3NwB+bd4KOm1Q6c7O3RNV2o6RPg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/1.1.0/modern-normalize.min.css"
+		integrity="sha512-wpPYUAdjBVSE4KJnH1VR1HeZfpl1ub8YT/NKx4PuQ5NmX2tKuGu6U/JRp5y+Y8XG2tV+wKQpNHVUX03MfMFn9Q=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<style type="text/css" media="screen">
+		.editor-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			width: 100vw;
+		}
+
+		#editor {
+			width: 80vw;
+			height: 80vh;
+		}
+
+		#parse {
+			margin-top: 1rem;
+			padding: 0.5rem 1rem;
+			font-size: 1.5rem;
+			border-radius: 0.5rem;
+			border: none;
+			background-color: #f1f1f1;
+			color: #333;
+			cursor: pointer;
+		}
+
+		#parse:hover {
+			background-color: #333;
+			color: #f1f1f1;
+		}
+
+		#output {
+			margin-top: 1rem;
+			padding: 0.5rem 1rem;
+			font-size: 1.5rem;
+			border-radius: 0.5rem;
+			border: none;
+			background-color: #f1f1f1;
+			color: #333;
+			cursor: pointer;
+		}
+
+		#errors {
+			margin-top: 1rem;
+			padding: 0.5rem 1rem;
+			font-size: 1.5rem;
+			border-radius: 0.5rem;
+			border: none;
+			background-color: #f1f1f1;
+			color: #333;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="editor-container">
+		<div id="editor"></div>
+		<button id="parse">Submit</button>
+	</div>
+	<div id="output"></div>
+	<div id="errors"></div>
+	<script type="module">
+		import { CharStream, CommonTokenStream } from 'antlr4';
+		import BlockLangLexer from '../src/ANTLR4/generated/BlockLangLexer';
+		import BlockLangParser from '../src/ANTLR4/generated/BlockLangParser';
+		import BlockVisitor from '../src/scripts/utils/BlockVisitor';
+
+
+		const editor = ace.edit("editor");
+		const parse = document.getElementById("parse");
+
+		editor.setTheme("ace/theme/monokai");
+		console.log(editor);
+		editor.resize();
+		editor.setShowPrintMargin(false);
+		editor.setFontSize(18);
+
+		function formatParseTree(tree) {
+			const indentChar = '&nbsp;&nbsp;&nbsp;&nbsp;'; // 2 spaces
+			let currentIndent = 0;
+			let result = '';
+			let isNewLine = true;
+
+			for (let i = 0; i < tree.length; i++) {
+				const char = tree[i];
+				if (char === '(') {
+					currentIndent++;
+					isNewLine = false;
+					result += '<br>' + indentChar.repeat(currentIndent - 1);
+				} else if (char === ')') {
+					currentIndent--;
+					if (isNewLine) {
+						result += '<br>';
+						result += indentChar.repeat(currentIndent);
+					}
+
+					isNewLine = true;
+				}
+				result += char;
+			}
+
+			return result.trim();
+		}
+
+		async function submitCode() {
+			const input = editor.getValue();
+			const chars = new CharStream(input);
+			const lexer = new BlockLangLexer(chars);
+			const tokens = new CommonTokenStream(lexer);
+			const parser = new BlockLangParser(tokens);
+			parser.buildParseTrees = true;
+			parser.removeErrorListeners();
+			parser.addErrorListener({
+				syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
+					const error = document.getElementById("errors");
+					error.innerHTML = `Syntax Error: ${msg} at line ${line} and column ${column}`;
+				}
+			});
+			const tree = parser.program();
+			const visitor = new BlockVisitor(document.getElementById("output"));
+			console.log(visitor.visit(tree));
+			document.getElementById("output").innerHTML = formatParseTree(tree.toStringTree(null, parser));
+		}
+		document.getElementById("parse").addEventListener("click", submitCode);
+	</script>
+	<noscript>Please enable JavaScript to run this app.</noscript>
+</body>
+
+</html>
