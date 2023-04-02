@@ -1,5 +1,6 @@
 // Generated from BlockLang.g4 by ANTLR 4.12.0
 // noinspection ES6UnusedImports,JSUnusedGlobalSymbols,JSUnusedLocalSymbols
+// @ts-nocheck
 import {
 	ATN,
 	ATNDeserializer,
@@ -23,12 +24,15 @@ export default class BlockLangLexer extends Lexer {
 	public static readonly EOF = Token.EOF;
 
 	public static readonly channelNames: string[] = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN" ];
-	public static readonly literalNames: string[] = [ null, "'loop'", "'endloop'", 
-                                                   "'up'", "'down'", "'left'", 
-                                                   "'right'" ];
-	public static readonly symbolicNames: string[] = [ null, null, null, null, 
-                                                    null, null, null, "NUMBER", 
-                                                    "WHITESPACE" ];
+	public static readonly literalNames: (string | null)[] = [ null, "'loop'", 
+                                                            "'endloop'", 
+                                                            "'up'", "'down'", 
+                                                            "'left'", "'right'" ];
+	public static readonly symbolicNames: (string | null)[] = [ null, null, 
+                                                             null, null, 
+                                                             null, null, 
+                                                             null, "NUMBER", 
+                                                             "WHITESPACE" ];
 	public static readonly modeNames: string[] = [ "DEFAULT_MODE", ];
 
 	public static readonly ruleNames: string[] = [
