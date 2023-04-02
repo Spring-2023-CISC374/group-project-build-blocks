@@ -74,6 +74,7 @@
 	<div id="output"></div>
 	<div id="errors"></div>
 	<script type="module">
+		// https://ace.c9.io/#nav=embedding
 		import { CharStream, CommonTokenStream } from 'antlr4';
 		import BlockLangLexer from '../src/ANTLR4/generated/BlockLangLexer';
 		import BlockLangParser from '../src/ANTLR4/generated/BlockLangParser';
@@ -89,6 +90,7 @@
 		editor.setShowPrintMargin(false);
 		editor.setFontSize(18);
 
+		// format parse a string parse tree based on the paranthesis
 		function formatParseTree(tree) {
 			const indentChar = '&nbsp;&nbsp;&nbsp;&nbsp;'; // 2 spaces
 			let currentIndent = 0;
@@ -115,7 +117,7 @@
 
 			return result.trim();
 		}
-
+		// https://github.com/antlr/antlr4/blob/master/doc/typescript-target.md
 		async function submitCode() {
 			const input = editor.getValue();
 			const chars = new CharStream(input);
