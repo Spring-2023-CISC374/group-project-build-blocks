@@ -124,12 +124,21 @@
 			const lexer = new BlockLangLexer(chars);
 			const tokens = new CommonTokenStream(lexer);
 			const parser = new BlockLangParser(tokens);
+			const error = document.getElementById("errors");
+			error.innerHTML = "";
+			lexer.removeErrorListeners();
+			lexer.addErrorListener({
+				syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
+					const error = document.getElementById("errors");
+					error.innerHTML += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+				}
+			});
 			parser.buildParseTrees = true;
 			parser.removeErrorListeners();
 			parser.addErrorListener({
 				syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
 					const error = document.getElementById("errors");
-					error.innerHTML = `Syntax Error: ${msg} at line ${line} and column ${column}`;
+					error.innerHTML += `Error: ${msg} at line ${line} and column ${column}. <br>`;
 				}
 			});
 			const tree = parser.program();
