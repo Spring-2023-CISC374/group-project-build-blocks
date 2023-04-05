@@ -1,9 +1,115 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=10563101&assignment_repo_type=AssignmentRepo)
-# group-game-project
+[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=10455766&assignment_repo_type=AssignmentRepo)
+# Phaser 3 + TypeScript + Vite.js Template
+> Make Phaser 3 games with TypeScript and modern frontend tooling.
 
-This assignment is where you will submit your code for your MVP as well as the rest of the versions of your educational game.
+![License](https://img.shields.io/badge/license-MIT-green)
 
-Michael Snead - Created the basic environment, the crane which can move around and pick up crates, and crates which can be picked up by the crane
-                (see basic-environment and basic-crane branches)
+This is a TypeScript specific fork of [phaser3-vite-template](https://github.com/ourcade/phaser3-vite-template).
 
-JD Wang - Setup file structure, copied configs from first-phaser3-typescript project. Created a simple parser for our block programming language. The parser is made using ANTLR4. There's also a text based code editor demo in feat-text-based-editor branch. The code editor is made using ace.js and ANTLR4 parser. See src/ANTLR4 for the language grammar file and public/editor.html for the code editor. There are some utility library located at src/scripts/utils/ (see feat-file-structure, feat-code-parser, feat-text-based-editor)
+## Prerequisites
+
+You'll need [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/) installed.
+
+It is highly recommended to use [Node Version Manager](https://github.com/nvm-sh/nvm) (nvm) to install Node.js and npm.
+
+For Windows users there is [Node Version Manager for Windows](https://github.com/coreybutler/nvm-windows).
+
+Install Node.js and `npm` with `nvm`:
+
+```bash
+nvm install node
+
+nvm use node
+```
+
+Replace 'node' with 'latest' for `nvm-windows`.
+
+## Getting Started
+
+You can clone this repository or use [degit](https://github.com/Rich-Harris/degit) to scaffold the project like this:
+
+```bash
+npx degit https://github.com/ourcade/phaser3-typescript-vite-template my-folder-name
+cd my-folder-name
+
+npm install
+```
+
+Start development server:
+
+```
+npm run start
+```
+
+To create a production build:
+
+```
+npm run build
+```
+
+Production files will be placed in the `dist` folder. Then upload those files to a web server. 🎉
+
+## Project Structure
+
+```
+    .
+    ├── dist
+    ├── node_modules
+    ├── public
+    ├── src
+    │   ├── HelloWorldScene.ts
+    │   ├── main.ts
+	├── index.html
+    ├── package.json
+```
+
+TypeScript files are intended for the `src` folder. `main.ts` is the entry point referenced by `index.html`.
+
+Other than that there is no opinion on how you should structure your project.
+
+There is an example `HelloWorldScene.ts` file that can be placed inside a `scenes` folder to organize by type or elsewhere to organize by function. For example, you can keep all files specific to the HelloWorld scene in a `hello-world` folder.
+
+It is all up to you!
+
+## Static Assets
+
+Any static assets like images or audio files should be placed in the `public` folder. It'll then be served from the root. For example: http://localhost:8000/images/my-image.png
+
+Example `public` structure:
+
+```
+    public
+    ├── images
+    │   ├── my-image.png
+    ├── music
+    │   ├── ...
+    ├── sfx
+    │   ├── ...
+```
+
+They can then be loaded by Phaser with `this.image.load('my-image', 'images/my-image.png')`.
+
+# TypeScript ESLint
+
+This template uses a basic `typescript-eslint` set up for code linting.
+
+It does not aim to be opinionated.
+
+[See here for rules to turn on or off](https://eslint.org/docs/rules/).
+
+## Dev Server Port
+
+You can change the dev server's port number by modifying the `vite.config.ts` file. Look for the `server` section:
+
+```js
+{
+	// ...
+	server: { host: '0.0.0.0', port: 8000 },
+}
+```
+
+Change 8000 to whatever you want.
+
+## License
+
+[MIT License](https://github.com/ourcade/phaser3-vite-template/blob/master/LICENSE)
