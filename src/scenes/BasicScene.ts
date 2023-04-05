@@ -34,20 +34,19 @@ export default class BasicScene extends Phaser.Scene {
 	}
     
     preload() {
-        this.load.image('background', '../public/assets/TempBackground.png');
-        this.load.image('gridSquare', '../public/assets/GridSquare.png');
+        this.load.image('background', '../assets/GameBackground.png');
+        this.load.image('gridSquare', '../assets/GridSquare.png');
 
-        this.load.image('regCrate', '../public/assets/regCrate.png');
-        this.load.image('craneOpen', '../public/assets/CraneBasicRed.png');
-        this.load.image('craneClosed', '../public/assets/CraneBasicGreen.png');
-        this.load.image('cranePickupBox', '../public/assets/CranePickupBox.png')
+        this.load.image('regCrate', '../assets/regCrate.png');
+        this.load.image('craneOpen', '../assets/CraneBasicRed.png');
+        this.load.image('craneClosed', '../assets/CraneBasicGreen.png');
+        this.load.image('cranePickupBox', '../assets/CranePickupBox.png')
 	}
 
     create() {
 
         //create the background and set the scale
         this.background = this.add.image(BasicScene.BACKGROUND_HORIZONTAL_CENTER, BasicScene.BACKGROUND_VERTICAL_CENTER, 'background');
-        this.background.setScale(BasicScene.BACKGROUND_WIDTH, BasicScene.BACKGROUND_HEIGHT);
 
         //create the grid for the building area and store it in gridSquares
         this.makeGrid(
