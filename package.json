@@ -15,7 +15,7 @@
 		"vite": "^4.2.0"
 	},
 	"dependencies": {
-		"antlr4": "^4.12.0",
+		"antlr4": "https://gitpkg.now.sh/antlr/antlr4/runtime/JavaScript?ce241de812fbf3dd118987ed851f187e30fa3d3d",
 		"jshint": "^2.13.6",
 		"phaser": "^3.55.2"
 	}
