@@ -4,8 +4,6 @@ import Crate from '../objects/Crate';
 
 export default class BasicScene extends Phaser.Scene {
     /* SCENE CONSTANTS */
-    public static readonly BACKGROUND_WIDTH = 800;
-    public static readonly BACKGROUND_HEIGHT = 600;
     public static readonly BACKGROUND_HORIZONTAL_CENTER = 400;
     public static readonly BACKGROUND_VERTICAL_CENTER = 300;
 
@@ -46,8 +44,8 @@ export default class BasicScene extends Phaser.Scene {
     create() {
 
         //create the background and set the scale
-        this.background = this.add.image(BasicScene.BACKGROUND_HORIZONTAL_CENTER, BasicScene.BACKGROUND_VERTICAL_CENTER, 'background');
-        this.background.setScale(BasicScene.BACKGROUND_WIDTH, BasicScene.BACKGROUND_HEIGHT);
+        this.background = this.add.image(this.sys.game.canvas.width / 2, this.sys.game.canvas.height / 2, 'background');
+        this.background.setScale(this.sys.game.canvas.width, this.sys.game.canvas.height);
 
         //create the grid for the building area and store it in gridSquares
         this.makeGrid(
