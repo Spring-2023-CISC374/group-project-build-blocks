@@ -1,0 +1,1 @@
+export type LevelObject = "none" | "crate-brown" | "crate-red" | "crate-green"| "crate-blue" | "crane";
