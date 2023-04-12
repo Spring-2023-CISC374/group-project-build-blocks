@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import Crane from '../objects/Crane';
 import { GridData } from '../interfaces/GridData';
+import Instruction from '../objects/Instruction';
 
 export default class BasicScene extends Phaser.Scene {
     /* SCENE CONSTANTS */
@@ -54,6 +55,10 @@ export default class BasicScene extends Phaser.Scene {
 
         //create the grid for the building area and store it in gridSquares
         this.makeGrid();
+        
+        //test instruction
+        const fred = new Instruction(this, 400, 600, "regCrate");
+        this.add.existing(fred);
 
         // TEMPORARY BUTTONS TO SHOW THAT CRANE MOVEMENT WORKS
         const leftButton = this.add.text(500, 100, 'Move Left!');
