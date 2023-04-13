@@ -142,9 +142,10 @@
 				}
 			});
 			const tree = parser.program();
-			const visitor = new BlockVisitor(document.getElementById("output"));
-			console.log(visitor.visit(tree));
+			// const visitor = new BlockVisitor(document.getElementById("output"));
+			// console.log(visitor.visit(tree));
 			document.getElementById("output").innerHTML = formatParseTree(tree.toStringTree(null, parser));
+			scene.testCode(input);
 		}
 		document.getElementById("parse").addEventListener("click", submitCode);
 	</script>
