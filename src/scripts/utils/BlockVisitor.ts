@@ -67,25 +67,25 @@ export default class BlockVisitor extends BlockLangVisitor<void> {
 		switch (ctx.getText()) {
 			case 'up':
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.moveUp()});
-				this.timing += Crane.MOVEMENT_TIME + 2000;
+				this.timing += Crane.MOVEMENT_TIME + 1000;
 				console.log('move up', this.timing);
 				break;
 			case 'down':
 				// this.crane?.moveDown();
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.moveDown()});
-				this.timing += Crane.MOVEMENT_TIME + 2000;
+				this.timing += Crane.MOVEMENT_TIME + 1000;
 				console.log('move down', this.timing);
 				break;
 			case 'left':
 				// this.crane?.moveLeft();
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.moveLeft()});
-				this.timing += Crane.MOVEMENT_TIME + 2000;
+				this.timing += Crane.MOVEMENT_TIME + 1000;
 				console.log('move leftr', this.timing);
 				break;
 			case 'right':
 				// this.crane?.moveRight();
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.moveRight()});
-				this.timing += Crane.MOVEMENT_TIME + 2000;
+				this.timing += Crane.MOVEMENT_TIME + 1000;
 				console.log('move roigiht', this.timing);
 				break;
 			default:

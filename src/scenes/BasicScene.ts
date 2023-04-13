@@ -97,8 +97,7 @@ export default class BasicScene extends Phaser.Scene {
         const releaseButton = this.add.text(500, 350, 'Release!');
         releaseButton.setInteractive();
         releaseButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.release()}});
-        this.testCode("up\nup\nright");
-        // create iframe and pass testCode function to it
+        // create iframe and pass scene to it
         
         const iframe = document.getElementById('editor') as HTMLIFrameElement;
         console.log(iframe)
