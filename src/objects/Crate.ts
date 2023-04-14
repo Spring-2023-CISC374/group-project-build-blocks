@@ -11,4 +11,13 @@ export default class Crate extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture, frame);
         this.color = color;
     }
+
+    public checkOverlap(crate: Crate) {
+        const xdiff = Math.abs( this.body.position.x - crate.body.position.x );
+        const ydiff = Math.abs( this.body.position.y - crate.body.position.y );
+        const diff = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+        console.log(diff);
+        return diff < 0.1;
+    }
+    
 }

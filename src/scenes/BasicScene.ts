@@ -1,12 +1,13 @@
 import Phaser from 'phaser'
 import Crane from '../objects/Crane';
 import { GridData } from '../interfaces/GridData';
+import Crate from '../objects/Crate';
 
 export default class BasicScene extends Phaser.Scene {
     /* SCENE CONSTANTS */
     private readonly GRID_WIDTH = 5;
     private readonly GRID_HEIGHT = 5;
-    private readonly MAX_SCORE = 3;
+    private readonly MAX_SCORE = 4;
 
     private startGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
         [
@@ -185,11 +186,20 @@ export default class BasicScene extends Phaser.Scene {
         return crates;
     }
 
+    private checkOverlap(c: Crate, ec:Crate) {
+        const xdiff = Math.abs( ec.body.position.x - c.body.position.x );
+        const ydiff = Math.abs( ec.body.position.y - c.body.position.y );
+        const diff = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+        return diff < 6;
+    }
+
     private getScore() {
         this.score = 0;
         this.crates?.getChildren().forEach((c) => {
             this.endCrates?.getChildren().forEach((ec) => {
-                if (c.body.position.x === ec.body.position.x && c.body.position.y === ec.body.position.y) {
+                const crate = c as Crate
+                const ecrate = ec as Crate
+                if (this.checkOverlap(ecrate, crate)) {
                     this.score++;
                 }
             })
@@ -198,6 +208,7 @@ export default class BasicScene extends Phaser.Scene {
 
     private checkWin() {
         this.getScore();
+        console.log(this.score)
         const didWin = this.score === this.MAX_SCORE;
         if (didWin) {
             this.add.text(400,300,"YOU WIN!");
