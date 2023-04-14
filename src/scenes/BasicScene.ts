@@ -5,17 +5,18 @@ import { CharStream, CommonTokenStream } from 'antlr4';
 import BlockLangLexer from '../ANTLR4/generated/BlockLangLexer';
 import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
 import BlockVisitor from '../scripts/utils/BlockVisitor';
+import Crate from '../objects/Crate';
 
 export default class BasicScene extends Phaser.Scene {
     
     /* SCENE CONSTANTS */
     private startGridData: GridData = { width: 5, height: 5, gridObjects: 
         [
-            ["crate-brown", "none", "none", "none", "none"],
-            ["crate-brown", "crate-brown", "none", "none", "none"],
+            ["crate-blue", "none", "none", "none", "none"],
+            ["crate-green", "crate-green", "none", "none", "none"],
             ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "crane", "none"],
-            ["none", "none", "crate-brown", "none", "none"]
+            ["none", "none", "crate-brown", "crane", "none"],
+            ["none", "none", "crate-red", "none", "none"]
         ]
     }
 
@@ -108,7 +109,6 @@ export default class BasicScene extends Phaser.Scene {
         this.crates = this.physics.add.group({ collideWorldBounds: true });
         for (let x = 0; x < this.startGridData.width; x++) {
             for (let y = 0; y < this.startGridData.height; y++) {
-                console.log("test");
                 switch(this.startGridData.gridObjects[y][x]) {
                     case "none":
                         break;
@@ -122,21 +122,57 @@ export default class BasicScene extends Phaser.Scene {
                         break;
                     }
                     case "crate-brown": {
-                        const oneGuy = this.crates.create(
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y, 
-                            'regCrate'
+                        const oneGuy = new Crate(
+                            this, 
+                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            "regCrate",
+                            "none"
                         );
                         
                         oneGuy.refreshBody();
+                        this.crates.add(oneGuy);
                         break;
                     }    
-                    case "crate-red":  
+                    case "crate-red": {
+                        const oneGuy = new Crate(
+                            this, 
+                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            "regCrate",
+                            "red"
+                        );
+                        
+                        oneGuy.refreshBody();
+                        this.crates.add(oneGuy);
                         break;
-                    case "crate-green":  
+                    } 
+                    case "crate-green": {
+                        const oneGuy = new Crate(
+                            this, 
+                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            "regCrate",
+                            "green"
+                        );
+                        
+                        oneGuy.refreshBody();
+                        this.crates.add(oneGuy);
                         break;
-                    case "crate-blue":  
+                    } 
+                    case "crate-blue":  {
+                        const oneGuy = new Crate(
+                            this, 
+                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            "regCrate",
+                            "blue"
+                        );
+                        
+                        oneGuy.refreshBody();
+                        this.crates.add(oneGuy);
                         break;
+                    } 
                     default:
                         break;
                   }
