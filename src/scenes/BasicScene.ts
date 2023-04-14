@@ -4,7 +4,10 @@ import { GridData } from '../interfaces/GridData';
 
 export default class BasicScene extends Phaser.Scene {
     /* SCENE CONSTANTS */
-    private startGridData: GridData = { width: 5, height: 5, gridObjects: 
+    private readonly GRID_WIDTH = 5;
+    private readonly GRID_HEIGHT = 5;
+
+    private startGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
         [
             ["crate-brown", "none", "none", "none", "none"],
             ["crate-brown", "crate-brown", "none", "none", "none"],
@@ -13,7 +16,15 @@ export default class BasicScene extends Phaser.Scene {
             ["none", "none", "crate-brown", "none", "none"]
         ]
     }
-
+    private endGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
+        [
+            ["none", "none", "none", "none", "crate-brown"],
+            ["none", "none", "none", "none", "none"],
+            ["none", "none", "none", "none", "none"],
+            ["none", "none", "none", "none", "none"],
+            ["none", "none", "none", "none", "none"]
+        ]
+    }
     public static readonly GRID_START_BOTTOM = 16;
     public static readonly GRID_START_LEFT = 16;
     public static readonly GRID_SQUARE_SIZE = 32;
@@ -22,6 +33,7 @@ export default class BasicScene extends Phaser.Scene {
     /* SCENE VARIABLES */
 
     private crates?: Phaser.Physics.Arcade.Group
+    private endCrates?: Phaser.Physics.Arcade.Group
     private crane?: Crane;
 
     //the background of the scene
@@ -118,11 +130,16 @@ export default class BasicScene extends Phaser.Scene {
         }
 
         // makes the game objects
-        this.crates = this.physics.add.group({ collideWorldBounds: true });
-        for (let x = 0; x < this.startGridData.width; x++) {
-            for (let y = 0; y < this.startGridData.height; y++) {
+        this.crates = this.placeBlocks(true);
+        this.endCrates = this.placeBlocks(false);
+    }
+
+    private placeBlocks(isBlocks: boolean) {
+        const crates = this.physics.add.group({ collideWorldBounds: true });
+        for (let x = 0; x < this.GRID_WIDTH; x++) {
+            for (let y = 0; y < this.GRID_HEIGHT; y++) {
                 console.log("test");
-                switch(this.startGridData.gridObjects[y][x]) {
+                switch(isBlocks ? this.startGridData.gridObjects[y][x] : this.endGridData.gridObjects[y][x]) {
                     case "none":
                         break;
                     case "crane":{
@@ -135,12 +152,14 @@ export default class BasicScene extends Phaser.Scene {
                         break;
                     }
                     case "crate-brown": {
-                        const oneGuy = this.crates.create(
+                        const oneGuy = crates.create(
                             BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
                             (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y, 
                             'regCrate'
                         );
-                        
+                        if (!isBlocks) {
+                            oneGuy.setAlpha(0.5);
+                        }
                         oneGuy.refreshBody();
                         break;
                     }    
@@ -155,9 +174,11 @@ export default class BasicScene extends Phaser.Scene {
                   }
             }
         }
-        this.physics.add.collider(this.crates, this.crates)
-        if(this.crane !== undefined) {
-            this.physics.add.collider(this.crane, this.crates);
+        this.physics.add.collider(crates, crates)
+        if(this.crane !== undefined && isBlocks) {
+            this.physics.add.collider(this.crane, crates);
         }
+
+        return crates;
     }
 }
