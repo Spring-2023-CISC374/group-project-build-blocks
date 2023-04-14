@@ -32,6 +32,7 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this.PICKUP_BOX);
         scene.physics.add.existing(this.PICKUP_BOX);
         this.PICKUP_BOX.setGravity(0, -300);
+        this.PICKUP_BOX.setVisible(false);
 
     }
 
