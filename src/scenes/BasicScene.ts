@@ -25,10 +25,10 @@ export default class BasicScene extends Phaser.Scene {
     }
     private endGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
         [
-            ["none", "none", "none", "none", "crate-brown"],
-            ["none", "none", "none", "none", "crate-brown"],
-            ["none", "none", "none", "none", "crate-brown"],
-            ["none", "none", "none", "none", "crate-brown"],
+            ["none", "none", "none", "crate-green", "crate-brown"],
+            ["none", "none", "none", "none", "crate-red"],
+            ["none", "none", "none", "none", "crate-blue"],
+            ["none", "none", "none", "none", "crate-green"],
             ["none", "none", "none", "none", "none"]
         ]
     }
@@ -123,6 +123,7 @@ export default class BasicScene extends Phaser.Scene {
         // makes the game objects
         this.crates = this.placeBlocks(true);
         this.endCrates = this.placeBlocks(false);
+        this.endCrates.setAlpha(0.5);
     }
 
     private placeBlocks(isBlocks: boolean) {
@@ -210,6 +211,9 @@ export default class BasicScene extends Phaser.Scene {
     }
 
     private checkOverlap(c: Crate, ec:Crate) {
+        if (c.getColor() !== ec.getColor()) {
+            return false;
+        }
         const xdiff = Math.abs( ec.body.position.x - c.body.position.x );
         const ydiff = Math.abs( ec.body.position.y - c.body.position.y );
         const diff = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
@@ -237,32 +241,6 @@ export default class BasicScene extends Phaser.Scene {
             this.add.text(400,300,"YOU WIN!");
         }
         return didWin;
-    }
-
-    testCode(s: string) {
-        const input = s;
-        const chars = new CharStream(input);
-        const lexer = new BlockLangLexer(chars);
-        const tokens = new CommonTokenStream(lexer);
-        const parser = new BlockLangParser(tokens);
-        let error = "";
-        lexer.removeErrorListeners();
-        lexer.addErrorListener({
-            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
-                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
-            }
-        });
-        parser.buildParseTrees = true;
-        parser.removeErrorListeners();
-        parser.addErrorListener({
-            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
-                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
-            }
-        });
-        const tree = parser.program();
-        const visitor = new BlockVisitor(null, this);
-        console.log(visitor.visit(tree));
-        // console.log(formatParseTree(tree.toStringTree(null, parser)));
     }
 
     testCode(s: string) {
