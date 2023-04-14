@@ -41,10 +41,14 @@ export default class BasicScene extends Phaser.Scene {
         this.load.image('background', '../public/assets/TempBackground.png');
         this.load.image('gridSquare', '../public/assets/GridSquare.png');
 
+        //grid area objects
         this.load.image('regCrate', '../public/assets/regCrate.png');
         this.load.image('craneOpen', '../public/assets/CraneBasicRed.png');
         this.load.image('craneClosed', '../public/assets/CraneBasicGreen.png');
-        this.load.image('cranePickupBox', '../public/assets/CranePickupBox.png')
+        this.load.image('cranePickupBox', '../public/assets/CranePickupBox.png');
+
+        //instruction area objects
+        this.load.image('instruction-start', '../public/assets/StartInstruction.png');
 	}
 
     create() {
@@ -57,7 +61,7 @@ export default class BasicScene extends Phaser.Scene {
         this.makeGrid();
         
         //test instruction
-        const fred = new Instruction(this, 400, 600, "regCrate");
+        const fred = new Instruction(this, 400, 600, "instruction-start", "start");
         this.add.existing(fred);
 
         // TEMPORARY BUTTONS TO SHOW THAT CRANE MOVEMENT WORKS
