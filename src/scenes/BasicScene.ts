@@ -6,6 +6,7 @@ export default class BasicScene extends Phaser.Scene {
     /* SCENE CONSTANTS */
     private readonly GRID_WIDTH = 5;
     private readonly GRID_HEIGHT = 5;
+    private readonly MAX_SCORE = 2;
 
     private startGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
         [
@@ -19,9 +20,9 @@ export default class BasicScene extends Phaser.Scene {
     private endGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
         [
             ["none", "none", "none", "none", "crate-brown"],
-            ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "none", "none"],
+            ["none", "none", "none", "none", "crate-brown"],
+            ["none", "none", "none", "none", "crate-brown"],
+            ["none", "none", "none", "none", "crate-brown"],
             ["none", "none", "none", "none", "none"]
         ]
     }
@@ -105,6 +106,7 @@ export default class BasicScene extends Phaser.Scene {
                 this.crane.toGrab = undefined;
             }
         }
+        this.checkWin();
     }
 
     /* HELPER FUNCTIONS */
@@ -180,5 +182,14 @@ export default class BasicScene extends Phaser.Scene {
         }
 
         return crates;
+    }
+
+    private checkWin() {
+        const didWin = false;
+        // this.endCrates?.getChildren().forEach
+        if (didWin) {
+            this.add.text(400,300,"YOU WIN!");
+        }
+        return didWin;
     }
 }
