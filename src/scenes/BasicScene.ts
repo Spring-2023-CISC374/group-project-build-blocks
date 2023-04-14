@@ -173,4 +173,30 @@ export default class BasicScene extends Phaser.Scene {
             this.physics.add.collider(this.crane, this.crates);
         }
     }
+
+    testCode(s: string) {
+        const input = s;
+        const chars = new CharStream(input);
+        const lexer = new BlockLangLexer(chars);
+        const tokens = new CommonTokenStream(lexer);
+        const parser = new BlockLangParser(tokens);
+        let error = "";
+        lexer.removeErrorListeners();
+        lexer.addErrorListener({
+            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
+                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+            }
+        });
+        parser.buildParseTrees = true;
+        parser.removeErrorListeners();
+        parser.addErrorListener({
+            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
+                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+            }
+        });
+        const tree = parser.program();
+        const visitor = new BlockVisitor(null, this);
+        console.log(visitor.visit(tree));
+        // console.log(formatParseTree(tree.toStringTree(null, parser)));
+    }
 }
