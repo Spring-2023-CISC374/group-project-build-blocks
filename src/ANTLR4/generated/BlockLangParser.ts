@@ -1,6 +1,6 @@
 // Generated from BlockLang.g4 by ANTLR 4.12.0
-// noinspection ES6UnusedImports,JSUnusedGlobalSymbols,JSUnusedLocalSymbols
 // @ts-nocheck
+// noinspection ES6UnusedImports,JSUnusedGlobalSymbols,JSUnusedLocalSymbols
 
 import {
 	ATN,
@@ -26,25 +26,30 @@ export default class BlockLangParser extends Parser {
 	public static readonly T__3 = 4;
 	public static readonly T__4 = 5;
 	public static readonly T__5 = 6;
-	public static readonly NUMBER = 7;
-	public static readonly WHITESPACE = 8;
+	public static readonly T__6 = 7;
+	public static readonly T__7 = 8;
+	public static readonly NUMBER = 9;
+	public static readonly WHITESPACE = 10;
 	public static readonly EOF = Token.EOF;
 	public static readonly RULE_program = 0;
 	public static readonly RULE_statement = 1;
 	public static readonly RULE_loopStatement = 2;
 	public static readonly RULE_moveStatement = 3;
+	public static readonly RULE_actionStatement = 4;
 	public static readonly literalNames: (string | null)[] = [ null, "'loop'", 
                                                             "'endloop'", 
                                                             "'up'", "'down'", 
-                                                            "'left'", "'right'" ];
+                                                            "'left'", "'right'", 
+                                                            "'open'", "'close'" ];
 	public static readonly symbolicNames: (string | null)[] = [ null, null, 
+                                                             null, null, 
                                                              null, null, 
                                                              null, null, 
                                                              null, "NUMBER", 
                                                              "WHITESPACE" ];
 	// tslint:disable:no-trailing-whitespace
 	public static readonly ruleNames: string[] = [
-		"program", "statement", "loopStatement", "moveStatement",
+		"program", "statement", "loopStatement", "moveStatement", "actionStatement",
 	];
 	public get grammarFileName(): string { return "BlockLang.g4"; }
 	public get literalNames(): (string | null)[] { return BlockLangParser.literalNames; }
@@ -68,21 +73,21 @@ export default class BlockLangParser extends Parser {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 9;
+			this.state = 11;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			do {
 				{
 				{
-				this.state = 8;
+				this.state = 10;
 				this.statement();
 				}
 				}
-				this.state = 11;
+				this.state = 13;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
-			} while ((((_la) & ~0x1F) === 0 && ((1 << _la) & 122) !== 0));
-			this.state = 13;
+			} while ((((_la) & ~0x1F) === 0 && ((1 << _la) & 506) !== 0));
+			this.state = 15;
 			this.match(BlockLangParser.EOF);
 			}
 		}
@@ -105,13 +110,13 @@ export default class BlockLangParser extends Parser {
 		let localctx: StatementContext = new StatementContext(this, this._ctx, this.state);
 		this.enterRule(localctx, 2, BlockLangParser.RULE_statement);
 		try {
-			this.state = 17;
+			this.state = 20;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 1:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 15;
+				this.state = 17;
 				this.loopStatement();
 				}
 				break;
@@ -121,8 +126,16 @@ export default class BlockLangParser extends Parser {
 			case 6:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 16;
+				this.state = 18;
 				this.moveStatement();
+				}
+				break;
+			case 7:
+			case 8:
+				this.enterOuterAlt(localctx, 3);
+				{
+				this.state = 19;
+				this.actionStatement();
 				}
 				break;
 			default:
@@ -151,25 +164,25 @@ export default class BlockLangParser extends Parser {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 19;
-			this.match(BlockLangParser.T__0);
-			this.state = 20;
-			this.match(BlockLangParser.NUMBER);
 			this.state = 22;
+			this.match(BlockLangParser.T__0);
+			this.state = 23;
+			this.match(BlockLangParser.NUMBER);
+			this.state = 25;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			do {
 				{
 				{
-				this.state = 21;
+				this.state = 24;
 				this.statement();
 				}
 				}
-				this.state = 24;
+				this.state = 27;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
-			} while ((((_la) & ~0x1F) === 0 && ((1 << _la) & 122) !== 0));
-			this.state = 26;
+			} while ((((_la) & ~0x1F) === 0 && ((1 << _la) & 506) !== 0));
+			this.state = 29;
 			this.match(BlockLangParser.T__1);
 			}
 		}
@@ -195,7 +208,7 @@ export default class BlockLangParser extends Parser {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 28;
+			this.state = 31;
 			_la = this._input.LA(1);
 			if(!((((_la) & ~0x1F) === 0 && ((1 << _la) & 120) !== 0))) {
 			this._errHandler.recoverInline(this);
@@ -220,16 +233,51 @@ export default class BlockLangParser extends Parser {
 		}
 		return localctx;
 	}
+	// @RuleVersion(0)
+	public actionStatement(): ActionStatementContext {
+		let localctx: ActionStatementContext = new ActionStatementContext(this, this._ctx, this.state);
+		this.enterRule(localctx, 8, BlockLangParser.RULE_actionStatement);
+		let _la: number;
+		try {
+			this.enterOuterAlt(localctx, 1);
+			{
+			this.state = 33;
+			_la = this._input.LA(1);
+			if(!(_la===7 || _la===8)) {
+			this._errHandler.recoverInline(this);
+			}
+			else {
+				this._errHandler.reportMatch(this);
+			    this.consume();
+			}
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.exitRule();
+		}
+		return localctx;
+	}
 
-	public static readonly _serializedATN: number[] = [4,1,8,31,2,0,7,0,2,1,
-	7,1,2,2,7,2,2,3,7,3,1,0,4,0,10,8,0,11,0,12,0,11,1,0,1,0,1,1,1,1,3,1,18,
-	8,1,1,2,1,2,1,2,4,2,23,8,2,11,2,12,2,24,1,2,1,2,1,3,1,3,1,3,0,0,4,0,2,4,
-	6,0,1,1,0,3,6,29,0,9,1,0,0,0,2,17,1,0,0,0,4,19,1,0,0,0,6,28,1,0,0,0,8,10,
-	3,2,1,0,9,8,1,0,0,0,10,11,1,0,0,0,11,9,1,0,0,0,11,12,1,0,0,0,12,13,1,0,
-	0,0,13,14,5,0,0,1,14,1,1,0,0,0,15,18,3,4,2,0,16,18,3,6,3,0,17,15,1,0,0,
-	0,17,16,1,0,0,0,18,3,1,0,0,0,19,20,5,1,0,0,20,22,5,7,0,0,21,23,3,2,1,0,
-	22,21,1,0,0,0,23,24,1,0,0,0,24,22,1,0,0,0,24,25,1,0,0,0,25,26,1,0,0,0,26,
-	27,5,2,0,0,27,5,1,0,0,0,28,29,7,0,0,0,29,7,1,0,0,0,3,11,17,24];
+	public static readonly _serializedATN: number[] = [4,1,10,36,2,0,7,0,2,
+	1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,1,0,4,0,12,8,0,11,0,12,0,13,1,0,1,0,1,1,1,
+	1,1,1,3,1,21,8,1,1,2,1,2,1,2,4,2,26,8,2,11,2,12,2,27,1,2,1,2,1,3,1,3,1,
+	4,1,4,1,4,0,0,5,0,2,4,6,8,0,2,1,0,3,6,1,0,7,8,34,0,11,1,0,0,0,2,20,1,0,
+	0,0,4,22,1,0,0,0,6,31,1,0,0,0,8,33,1,0,0,0,10,12,3,2,1,0,11,10,1,0,0,0,
+	12,13,1,0,0,0,13,11,1,0,0,0,13,14,1,0,0,0,14,15,1,0,0,0,15,16,5,0,0,1,16,
+	1,1,0,0,0,17,21,3,4,2,0,18,21,3,6,3,0,19,21,3,8,4,0,20,17,1,0,0,0,20,18,
+	1,0,0,0,20,19,1,0,0,0,21,3,1,0,0,0,22,23,5,1,0,0,23,25,5,9,0,0,24,26,3,
+	2,1,0,25,24,1,0,0,0,26,27,1,0,0,0,27,25,1,0,0,0,27,28,1,0,0,0,28,29,1,0,
+	0,0,29,30,5,2,0,0,30,5,1,0,0,0,31,32,7,0,0,0,32,7,1,0,0,0,33,34,7,1,0,0,
+	34,9,1,0,0,0,3,13,20,27];
 
 	private static __ATN: ATN;
 	public static get _ATN(): ATN {
@@ -293,6 +341,9 @@ export class StatementContext extends ParserRuleContext {
 	}
 	public moveStatement(): MoveStatementContext {
 		return this.getTypedRuleContext(MoveStatementContext, 0) as MoveStatementContext;
+	}
+	public actionStatement(): ActionStatementContext {
+		return this.getTypedRuleContext(ActionStatementContext, 0) as ActionStatementContext;
 	}
     public get ruleIndex(): number {
     	return BlockLangParser.RULE_statement;
@@ -378,6 +429,35 @@ export class MoveStatementContext extends ParserRuleContext {
 	public accept<Result>(visitor: BlockLangVisitor<Result>): Result {
 		if (visitor.visitMoveStatement) {
 			return visitor.visitMoveStatement(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+
+
+export class ActionStatementContext extends ParserRuleContext {
+	constructor(parser?: BlockLangParser, parent?: ParserRuleContext, invokingState?: number) {
+		super(parent, invokingState);
+    	this.parser = parser;
+	}
+    public get ruleIndex(): number {
+    	return BlockLangParser.RULE_actionStatement;
+	}
+	public enterRule(listener: BlockLangListener): void {
+	    if(listener.enterActionStatement) {
+	 		listener.enterActionStatement(this);
+		}
+	}
+	public exitRule(listener: BlockLangListener): void {
+	    if(listener.exitActionStatement) {
+	 		listener.exitActionStatement(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: BlockLangVisitor<Result>): Result {
+		if (visitor.visitActionStatement) {
+			return visitor.visitActionStatement(this);
 		} else {
 			return visitor.visitChildren(this);
 		}

@@ -7,6 +7,7 @@ program
 statement
     : loopStatement
     | moveStatement
+    | actionStatement
     ;
 
 loopStatement
@@ -18,6 +19,11 @@ moveStatement
     | 'down' 
     | 'left' 
     | 'right'
+    ;
+
+actionStatement
+    : 'open'
+    | 'close'
     ;
 
 NUMBER

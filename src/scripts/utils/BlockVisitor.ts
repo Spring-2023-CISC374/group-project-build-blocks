@@ -58,6 +58,29 @@ export default class BlockVisitor extends BlockLangVisitor<void> {
 		return;
 	}
 
+	visitActionStatement = (ctx: ParserRuleContext) => {
+		if (this.output) {
+			this.output.innerHTML += `${'&nbsp;'.repeat(this.indent * 4)}visitActionStatement ${ctx.getText()}<br>`;
+		}
+		// console.log('visitActionStatement', ctx);
+		switch (ctx.getText()) {
+			case 'open':
+				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.release()});
+				this.timing += Crane.MOVEMENT_TIME + 1000;
+				console.log('open', this.timing);
+				break;
+			case 'close':
+				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.grab()});
+				this.timing += Crane.MOVEMENT_TIME + 1000;
+				console.log('close', this.timing);
+				break;
+			default:
+				break;
+		}
+		return;
+	}
+
+
 	visitMoveStatement = (ctx: ParserRuleContext) => {
 		
 		if (this.output) {

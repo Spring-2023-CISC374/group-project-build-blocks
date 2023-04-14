@@ -1,4 +1,5 @@
 // Generated from BlockLang.g4 by ANTLR 4.12.0
+// @ts-nocheck
 
 import {ParseTreeListener} from "antlr4";
 
@@ -7,6 +8,7 @@ import { ProgramContext } from "./BlockLangParser";
 import { StatementContext } from "./BlockLangParser";
 import { LoopStatementContext } from "./BlockLangParser";
 import { MoveStatementContext } from "./BlockLangParser";
+import { ActionStatementContext } from "./BlockLangParser";
 
 
 /**
@@ -54,5 +56,15 @@ export default class BlockLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitMoveStatement?: (ctx: MoveStatementContext) => void;
+	/**
+	 * Enter a parse tree produced by `BlockLangParser.actionStatement`.
+	 * @param ctx the parse tree
+	 */
+	enterActionStatement?: (ctx: ActionStatementContext) => void;
+	/**
+	 * Exit a parse tree produced by `BlockLangParser.actionStatement`.
+	 * @param ctx the parse tree
+	 */
+	exitActionStatement?: (ctx: ActionStatementContext) => void;
 }
 
