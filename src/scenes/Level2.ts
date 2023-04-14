@@ -7,21 +7,21 @@ import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
 import BlockVisitor from '../scripts/utils/BlockVisitor';
 import Crate from '../objects/Crate';
 
-export default class BasicScene extends Phaser.Scene {
+export default class Level2 extends Phaser.Scene {
     
     /* SCENE CONSTANTS */
     private startGridData: GridData = { width: 5, height: 5, gridObjects: 
         [
-            ["crate-brown", "crate-brown", "crate-brown", "none", "none"],
-            ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "crane", "none"],
-            ["none", "none", "none", "none", "none"]
+            ["crate-red", "crate-blue", "crate-green", "none", "none"],
+            ["crate-green", "crate-red", "crate-blue", "none", "none"],
+            ["none", "none", "none", "none", "crate-red"],
+            ["none", "none", "none", "crane", "crate-blue"],
+            ["none", "none", "none", "none", "crate-green"]
         ]
     }
 
     private blockCount = "left: unlimited\nright: unlimited\nup: unlimited \ndown: unlimited\nclose: unlimited\nopen: unlimited\nloops: unlimited\nnumbers: unlimited\n\nsample program:\n\nloop 3\nup\nup\nright\nendloop";
-    private goal = "GOAL\nE E E E E\nE E C E E\nE E T E E\nE E T E E\nE E T E E\n\nE = empty\nC = crane\nT = tan\nR = Red\nG = green\nB = blue";
+    private goal = "GOAL\nE E E E C\nE E E E E\nB R G E E\nB R G E E\nB R G E E\n\nE = empty\nC = crane\nT = tan\nR = Red\nG = green\nB = blue";
 
     public static readonly GRID_START_BOTTOM = 16;
     public static readonly GRID_START_LEFT = 16;
@@ -76,7 +76,7 @@ export default class BasicScene extends Phaser.Scene {
         // create iframe and pass scene to it
         const iframe = document.getElementById('editor') as HTMLIFrameElement;
         console.log(iframe)
-        const contentWnd = iframe.contentWindow as Window  & {scene: BasicScene};
+        const contentWnd = iframe.contentWindow as Window  & {scene: Level2};
         contentWnd.scene = this;
 
 
@@ -110,8 +110,8 @@ export default class BasicScene extends Phaser.Scene {
             
             for (let y = 0; y < this.startGridData.height; y++) {
                 const newSquare = this.add.image(
-                    BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
-                    (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y, 
+                    Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x, 
+                    (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y, 
                     'gridSquare'
                 );
                 
@@ -131,8 +131,8 @@ export default class BasicScene extends Phaser.Scene {
                     case "crane":{
                         this.crane = new Crane(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,  
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x, 
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,  
                             false
                         );
                         break;
@@ -140,8 +140,8 @@ export default class BasicScene extends Phaser.Scene {
                     case "crate-brown": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "none"
                         );
@@ -153,8 +153,8 @@ export default class BasicScene extends Phaser.Scene {
                     case "crate-red": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "red"
                         );
@@ -166,8 +166,8 @@ export default class BasicScene extends Phaser.Scene {
                     case "crate-green": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "green"
                         );
@@ -179,8 +179,8 @@ export default class BasicScene extends Phaser.Scene {
                     case "crate-blue":  {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "blue"
                         );
