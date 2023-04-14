@@ -54,7 +54,7 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         }
         this.setTexture('craneClosed');
     }
-
+     
     public moveDown() {
         if(!this.isMoving) {
             this.isMoving = true;

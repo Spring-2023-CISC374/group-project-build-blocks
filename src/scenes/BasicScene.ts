@@ -1,8 +1,14 @@
 import Phaser from 'phaser'
 import Crane from '../objects/Crane';
 import { GridData } from '../interfaces/GridData';
+import Crate from '../objects/Crate';
+import { CharStream, CommonTokenStream } from 'antlr4';
+import BlockLangLexer from '../ANTLR4/generated/BlockLangLexer';
+import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
+import BlockVisitor from '../scripts/utils/BlockVisitor';
 
 export default class BasicScene extends Phaser.Scene {
+    
     /* SCENE CONSTANTS */
     private startGridData: GridData = { width: 5, height: 5, gridObjects: 
         [
@@ -79,6 +85,13 @@ export default class BasicScene extends Phaser.Scene {
         const releaseButton = this.add.text(500, 350, 'Release!');
         releaseButton.setInteractive();
         releaseButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.release()}});
+        // create iframe and pass scene to it
+        
+        const iframe = document.getElementById('editor') as HTMLIFrameElement;
+        console.log(iframe)
+        const contentWnd = iframe.contentWindow as Window  & {scene: BasicScene};
+        contentWnd.scene = this;
+
     }
 
     update(){
