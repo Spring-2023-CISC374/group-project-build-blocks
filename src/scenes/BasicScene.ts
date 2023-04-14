@@ -60,32 +60,7 @@ export default class BasicScene extends Phaser.Scene {
         //create the grid for the building area and store it in gridSquares
         this.makeGrid();
 
-        // TEMPORARY BUTTONS TO SHOW THAT CRANE MOVEMENT WORKS
-        const leftButton = this.add.text(500, 100, 'Move Left!');
-        leftButton.setInteractive();
-        leftButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveLeft()}});
-
-        const rightButton = this.add.text(500, 150, 'Move Right!');
-        rightButton.setInteractive();
-        rightButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveRight()}});
-
-        const upButton = this.add.text(500, 200, 'Move Up!');
-        upButton.setInteractive();
-        upButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveUp()}});
-
-        const downButton = this.add.text(500, 250, 'Move Down!');
-        downButton.setInteractive();
-        downButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveDown()}});
-
-        const grabButton = this.add.text(500, 300, 'Grab!');
-        grabButton.setInteractive();
-        grabButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.grab()}});
-
-        const releaseButton = this.add.text(500, 350, 'Release!');
-        releaseButton.setInteractive();
-        releaseButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.release()}});
         // create iframe and pass scene to it
-        
         const iframe = document.getElementById('editor') as HTMLIFrameElement;
         console.log(iframe)
         const contentWnd = iframe.contentWindow as Window  & {scene: BasicScene};
