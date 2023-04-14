@@ -12,15 +12,15 @@ export default class BasicScene extends Phaser.Scene {
     /* SCENE CONSTANTS */
     private readonly GRID_WIDTH = 5;
     private readonly GRID_HEIGHT = 5;
-    private readonly MAX_SCORE = 4;
+    private readonly MAX_SCORE = 3;
 
     private startGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
         [
-            ["crate-brown", "crate-brown", "crate-brown", "none", "none"],
+            ["none", "none", "none", "none", "crane"],
             ["none", "none", "none", "none", "none"],
             ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "crane", "none"],
-            ["none", "none", "none", "none", "none"]
+            ["none", "none", "none", "none", "none"],
+            ["crate-brown", "crate-brown", "crate-brown", "none", "none"]
         ]
     }
 
@@ -28,11 +28,11 @@ export default class BasicScene extends Phaser.Scene {
     private goal = "GOAL\nE E E E E\nE E C E E\nE E T E E\nE E T E E\nE E T E E\n\nE = empty\nC = crane\nT = tan\nR = Red\nG = green\nB = blue";
     private endGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
         [
-            ["none", "none", "none", "crate-green", "crate-brown"],
-            ["none", "none", "none", "none", "crate-red"],
-            ["none", "none", "none", "none", "crate-blue"],
-            ["none", "none", "none", "none", "crate-green"],
-            ["none", "none", "none", "none", "none"]
+            ["none", "none", "none", "none", "none"],
+            ["none", "none", "none", "none", "none"],
+            ["none", "none", "crate-brown", "none", "none"],
+            ["none", "none", "crate-brown", "none", "none"],
+            ["none", "none", "crate-brown", "none", "none"]
         ]
     }
     public static readonly GRID_START_BOTTOM = 16;
@@ -69,13 +69,13 @@ export default class BasicScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', '../public/assets/TempBackground.png');
-        this.load.image('gridSquare', '../public/assets/GridSquare.png');
+        this.load.image('background', '../assets/TempBackground.png');
+        this.load.image('gridSquare', '../assets/GridSquare.png');
 
-        this.load.image('regCrate', '../public/assets/regCrate.png');
-        this.load.image('craneOpen', '../public/assets/CraneBasicRed.png');
-        this.load.image('craneClosed', '../public/assets/CraneBasicGreen.png');
-        this.load.image('cranePickupBox', '../public/assets/CranePickupBox.png')
+        this.load.image('regCrate', '../assets/regCrate.png');
+        this.load.image('craneOpen', '../assets/CraneBasicRed.png');
+        this.load.image('craneClosed', '../assets/CraneBasicGreen.png');
+        this.load.image('cranePickupBox', '../assets/CranePickupBox.png')
 	}
 
     create() {
@@ -145,9 +145,9 @@ export default class BasicScene extends Phaser.Scene {
     private placeBlocks(isBlocks: boolean) {
         const crates = this.physics.add.group({ collideWorldBounds: true });
         for (let x = 0; x < this.GRID_WIDTH; x++) {
-            for (let y = 0; y < this.GRID_HEIGHT; y++) {
+            for (let y = this.GRID_HEIGHT - 1; y >= 0; y--) {
                 console.log("test");
-                switch(isBlocks ? this.startGridData.gridObjects[y][x] : this.endGridData.gridObjects[y][x]) {
+                switch(isBlocks ? this.startGridData.gridObjects[4-y][x] : this.endGridData.gridObjects[4-y][x]) {
                     case "none":
                         break;
                     case "crane":{
@@ -213,16 +213,16 @@ export default class BasicScene extends Phaser.Scene {
                         crates.add(oneGuy);
                         break;
                     } 
-                    default:
+                    default: {
                         break;
-                  }
+                    }
+                }
             }
         }
         this.physics.add.collider(crates, crates)
         if(this.crane !== undefined && isBlocks) {
             this.physics.add.collider(this.crane, crates);
         }
-
         return crates;
     }
 
