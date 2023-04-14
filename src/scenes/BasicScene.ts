@@ -1,7 +1,6 @@
 import Phaser from 'phaser'
 import Crane from '../objects/Crane';
 import { GridData } from '../interfaces/GridData';
-import Crate from '../objects/Crate';
 import { CharStream, CommonTokenStream } from 'antlr4';
 import BlockLangLexer from '../ANTLR4/generated/BlockLangLexer';
 import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
