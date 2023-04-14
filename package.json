@@ -4,7 +4,8 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"start": "vite",
+        "start": "vite",
+		"dev": "vite",
 		"build": "tsc && vite build",
 		"preview": "vite preview"
 	},
@@ -16,6 +17,8 @@
 		"vite": "^3.1.0"
 	},
 	"dependencies": {
+		"antlr4": "https://gitpkg.now.sh/antlr/antlr4/runtime/JavaScript?ce241de812fbf3dd118987ed851f187e30fa3d3d&scripts.postinstall=npm%20install%20--ignore-scripts%20%26%26%20npm%20run%20build",
+		"jshint": "^2.13.6",
 		"phaser": "^3.55.2"
 	}
 }

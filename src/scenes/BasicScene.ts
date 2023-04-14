@@ -1,9 +1,14 @@
 import Phaser from 'phaser'
 import Crane from '../objects/Crane';
 import { GridData } from '../interfaces/GridData';
+import { CharStream, CommonTokenStream } from 'antlr4';
+import BlockLangLexer from '../ANTLR4/generated/BlockLangLexer';
+import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
+import BlockVisitor from '../scripts/utils/BlockVisitor';
 import Crate from '../objects/Crate';
 
 export default class BasicScene extends Phaser.Scene {
+    
     /* SCENE CONSTANTS */
     private readonly GRID_WIDTH = 5;
     private readonly GRID_HEIGHT = 5;
@@ -11,11 +16,11 @@ export default class BasicScene extends Phaser.Scene {
 
     private startGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
         [
-            ["crate-brown", "none", "none", "none", "none"],
-            ["crate-brown", "crate-brown", "none", "none", "none"],
+            ["crate-blue", "none", "none", "none", "none"],
+            ["crate-green", "crate-green", "none", "none", "none"],
             ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "crane", "none"],
-            ["none", "none", "crate-brown", "none", "none"]
+            ["none", "none", "crate-brown", "crane", "none"],
+            ["none", "none", "crate-red", "none", "none"]
         ]
     }
     private endGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
@@ -70,30 +75,12 @@ export default class BasicScene extends Phaser.Scene {
         //create the grid for the building area and store it in gridSquares
         this.makeGrid();
 
-        // TEMPORARY BUTTONS TO SHOW THAT CRANE MOVEMENT WORKS
-        const leftButton = this.add.text(500, 100, 'Move Left!');
-        leftButton.setInteractive();
-        leftButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveLeft()}});
+        // create iframe and pass scene to it
+        const iframe = document.getElementById('editor') as HTMLIFrameElement;
+        console.log(iframe)
+        const contentWnd = iframe.contentWindow as Window  & {scene: BasicScene};
+        contentWnd.scene = this;
 
-        const rightButton = this.add.text(500, 150, 'Move Right!');
-        rightButton.setInteractive();
-        rightButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveRight()}});
-
-        const upButton = this.add.text(500, 200, 'Move Up!');
-        upButton.setInteractive();
-        upButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveUp()}});
-
-        const downButton = this.add.text(500, 250, 'Move Down!');
-        downButton.setInteractive();
-        downButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.moveDown()}});
-
-        const grabButton = this.add.text(500, 300, 'Grab!');
-        grabButton.setInteractive();
-        grabButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.grab()}});
-
-        const releaseButton = this.add.text(500, 350, 'Release!');
-        releaseButton.setInteractive();
-        releaseButton.on('pointerup', () => {if(this.crane !== undefined) {this.crane.release()}});
     }
 
     update(){
@@ -156,23 +143,59 @@ export default class BasicScene extends Phaser.Scene {
                         break;
                     }
                     case "crate-brown": {
-                        const oneGuy = crates.create(
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y, 
-                            'regCrate'
+                        const oneGuy = new Crate(
+                            this, 
+                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            "regCrate",
+                            "none"
                         );
                         if (!isBlocks) {
                             oneGuy.setAlpha(0.5);
                         }
                         oneGuy.refreshBody();
+                        crates.add(oneGuy);
                         break;
                     }    
-                    case "crate-red":  
+                    case "crate-red": {
+                        const oneGuy = new Crate(
+                            this, 
+                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            "regCrate",
+                            "red"
+                        );
+                        
+                        oneGuy.refreshBody();
+                        crates.add(oneGuy);
                         break;
-                    case "crate-green":  
+                    } 
+                    case "crate-green": {
+                        const oneGuy = new Crate(
+                            this, 
+                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            "regCrate",
+                            "green"
+                        );
+                        
+                        oneGuy.refreshBody();
+                        crates.add(oneGuy);
                         break;
-                    case "crate-blue":  
+                    } 
+                    case "crate-blue":  {
+                        const oneGuy = new Crate(
+                            this, 
+                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            "regCrate",
+                            "blue"
+                        );
+                        
+                        oneGuy.refreshBody();
+                        crates.add(oneGuy);
                         break;
+                    } 
                     default:
                         break;
                   }
@@ -214,5 +237,57 @@ export default class BasicScene extends Phaser.Scene {
             this.add.text(400,300,"YOU WIN!");
         }
         return didWin;
+    }
+
+    testCode(s: string) {
+        const input = s;
+        const chars = new CharStream(input);
+        const lexer = new BlockLangLexer(chars);
+        const tokens = new CommonTokenStream(lexer);
+        const parser = new BlockLangParser(tokens);
+        let error = "";
+        lexer.removeErrorListeners();
+        lexer.addErrorListener({
+            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
+                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+            }
+        });
+        parser.buildParseTrees = true;
+        parser.removeErrorListeners();
+        parser.addErrorListener({
+            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
+                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+            }
+        });
+        const tree = parser.program();
+        const visitor = new BlockVisitor(null, this);
+        console.log(visitor.visit(tree));
+        // console.log(formatParseTree(tree.toStringTree(null, parser)));
+    }
+
+    testCode(s: string) {
+        const input = s;
+        const chars = new CharStream(input);
+        const lexer = new BlockLangLexer(chars);
+        const tokens = new CommonTokenStream(lexer);
+        const parser = new BlockLangParser(tokens);
+        let error = "";
+        lexer.removeErrorListeners();
+        lexer.addErrorListener({
+            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
+                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+            }
+        });
+        parser.buildParseTrees = true;
+        parser.removeErrorListeners();
+        parser.addErrorListener({
+            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
+                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+            }
+        });
+        const tree = parser.program();
+        const visitor = new BlockVisitor(null, this);
+        console.log(visitor.visit(tree));
+        // console.log(formatParseTree(tree.toStringTree(null, parser)));
     }
 }
