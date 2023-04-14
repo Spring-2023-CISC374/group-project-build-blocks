@@ -7,34 +7,22 @@ import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
 import BlockVisitor from '../scripts/utils/BlockVisitor';
 import Crate from '../objects/Crate';
 
-export default class BasicScene extends Phaser.Scene {
+export default class Level2 extends Phaser.Scene {
     
     /* SCENE CONSTANTS */
-    private readonly GRID_WIDTH = 5;
-    private readonly GRID_HEIGHT = 5;
-    private readonly MAX_SCORE = 4;
-
-    private startGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
+    private startGridData: GridData = { width: 5, height: 5, gridObjects: 
         [
-            ["crate-brown", "crate-brown", "crate-brown", "none", "none"],
-            ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "none", "none"],
-            ["none", "none", "none", "crane", "none"],
-            ["none", "none", "none", "none", "none"]
+            ["crate-red", "crate-blue", "crate-green", "none", "none"],
+            ["crate-green", "crate-red", "crate-blue", "none", "none"],
+            ["none", "none", "none", "none", "crate-red"],
+            ["none", "none", "none", "crane", "crate-blue"],
+            ["none", "none", "none", "none", "crate-green"]
         ]
     }
 
     private blockCount = "left: unlimited\nright: unlimited\nup: unlimited \ndown: unlimited\nclose: unlimited\nopen: unlimited\nloops: unlimited\nnumbers: unlimited\n\nsample program:\n\nloop 3\nup\nup\nright\nendloop";
-    private goal = "GOAL\nE E E E E\nE E C E E\nE E T E E\nE E T E E\nE E T E E\n\nE = empty\nC = crane\nT = tan\nR = Red\nG = green\nB = blue";
-    private endGridData: GridData = { width: this.GRID_WIDTH, height: this.GRID_HEIGHT, gridObjects: 
-        [
-            ["none", "none", "none", "crate-green", "crate-brown"],
-            ["none", "none", "none", "none", "crate-red"],
-            ["none", "none", "none", "none", "crate-blue"],
-            ["none", "none", "none", "none", "crate-green"],
-            ["none", "none", "none", "none", "none"]
-        ]
-    }
+    private goal = "GOAL\nE E E E C\nE E E E E\nB R G E E\nB R G E E\nB R G E E\n\nE = empty\nC = crane\nT = tan\nR = Red\nG = green\nB = blue";
+
     public static readonly GRID_START_BOTTOM = 16;
     public static readonly GRID_START_LEFT = 16;
     public static readonly GRID_SQUARE_SIZE = 32;
@@ -43,9 +31,7 @@ export default class BasicScene extends Phaser.Scene {
     /* SCENE VARIABLES */
 
     private crates?: Phaser.Physics.Arcade.Group
-    private endCrates?: Phaser.Physics.Arcade.Group
     private crane?: Crane;
-    private score = 0;
 
     //the background of the scene
     private background?: Phaser.GameObjects.Image
@@ -90,7 +76,7 @@ export default class BasicScene extends Phaser.Scene {
         // create iframe and pass scene to it
         const iframe = document.getElementById('editor') as HTMLIFrameElement;
         console.log(iframe)
-        const contentWnd = iframe.contentWindow as Window  & {scene: BasicScene};
+        const contentWnd = iframe.contentWindow as Window  & {scene: Level2};
         contentWnd.scene = this;
 
 
@@ -111,7 +97,6 @@ export default class BasicScene extends Phaser.Scene {
                 this.crane.toGrab = undefined;
             }
         }
-        this.checkWin();
     }
 
     /* HELPER FUNCTIONS */
@@ -125,8 +110,8 @@ export default class BasicScene extends Phaser.Scene {
             
             for (let y = 0; y < this.startGridData.height; y++) {
                 const newSquare = this.add.image(
-                    BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
-                    (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y, 
+                    Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x, 
+                    (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y, 
                     'gridSquare'
                 );
                 
@@ -137,24 +122,17 @@ export default class BasicScene extends Phaser.Scene {
         }
 
         // makes the game objects
-        this.crates = this.placeBlocks(true);
-        this.endCrates = this.placeBlocks(false);
-        this.endCrates.setAlpha(0.5);
-    }
-
-    private placeBlocks(isBlocks: boolean) {
-        const crates = this.physics.add.group({ collideWorldBounds: true });
-        for (let x = 0; x < this.GRID_WIDTH; x++) {
-            for (let y = 0; y < this.GRID_HEIGHT; y++) {
-                console.log("test");
-                switch(isBlocks ? this.startGridData.gridObjects[y][x] : this.endGridData.gridObjects[y][x]) {
+        this.crates = this.physics.add.group({ collideWorldBounds: true });
+        for (let x = 0; x < this.startGridData.width; x++) {
+            for (let y = 0; y < this.startGridData.height; y++) {
+                switch(this.startGridData.gridObjects[y][x]) {
                     case "none":
                         break;
                     case "crane":{
                         this.crane = new Crane(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,  
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x, 
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,  
                             false
                         );
                         break;
@@ -162,55 +140,53 @@ export default class BasicScene extends Phaser.Scene {
                     case "crate-brown": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "none"
                         );
-                        if (!isBlocks) {
-                            oneGuy.setAlpha(0.5);
-                        }
+                        
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        this.crates.add(oneGuy);
                         break;
                     }    
                     case "crate-red": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "red"
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        this.crates.add(oneGuy);
                         break;
                     } 
                     case "crate-green": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "green"
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        this.crates.add(oneGuy);
                         break;
                     } 
                     case "crate-blue":  {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level2.GRID_START_LEFT + Level2.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level2.GRID_START_BOTTOM) - Level2.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "blue"
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        this.crates.add(oneGuy);
                         break;
                     } 
                     default:
@@ -218,45 +194,10 @@ export default class BasicScene extends Phaser.Scene {
                   }
             }
         }
-        this.physics.add.collider(crates, crates)
-        if(this.crane !== undefined && isBlocks) {
-            this.physics.add.collider(this.crane, crates);
+        this.physics.add.collider(this.crates, this.crates)
+        if(this.crane !== undefined) {
+            this.physics.add.collider(this.crane, this.crates);
         }
-
-        return crates;
-    }
-
-    private checkOverlap(c: Crate, ec:Crate) {
-        if (c.getColor() !== ec.getColor()) {
-            return false;
-        }
-        const xdiff = Math.abs( ec.body.position.x - c.body.position.x );
-        const ydiff = Math.abs( ec.body.position.y - c.body.position.y );
-        const diff = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
-        return diff < 6;
-    }
-
-    private getScore() {
-        this.score = 0;
-        this.crates?.getChildren().forEach((c) => {
-            this.endCrates?.getChildren().forEach((ec) => {
-                const crate = c as Crate
-                const ecrate = ec as Crate
-                if (this.checkOverlap(ecrate, crate)) {
-                    this.score++;
-                }
-            })
-        }, this)
-    }
-
-    private checkWin() {
-        this.getScore();
-        console.log(this.score)
-        const didWin = this.score === this.MAX_SCORE;
-        if (didWin) {
-            this.add.text(400,300,"YOU WIN!");
-        }
-        return didWin;
     }
 
     testCode(s: string) {
