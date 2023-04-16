@@ -76,6 +76,10 @@ export default class BasicScene extends Phaser.Scene {
         this.load.image('craneOpen', '../assets/CraneBasicRed.png');
         this.load.image('craneClosed', '../assets/CraneBasicGreen.png');
         this.load.image('cranePickupBox', '../assets/CranePickupBox.png')
+        this.load.image('regCrate', '../assets/regCrate.png');
+        this.load.image('craneOpen', '../assets/CraneBasicRed.png');
+        this.load.image('craneClosed', '../assets/CraneBasicGreen.png');
+        this.load.image('cranePickupBox', '../assets/CranePickupBox.png')
 	}
 
     create() {
