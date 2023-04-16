@@ -6,7 +6,6 @@ import BlockLangLexer from '../ANTLR4/generated/BlockLangLexer';
 import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
 import BlockVisitor from '../scripts/utils/BlockVisitor';
 import Crate from '../objects/Crate';
-import { Grid } from 'matter';
 
 export default class Level extends Phaser.Scene {
     
@@ -15,8 +14,7 @@ export default class Level extends Phaser.Scene {
     private readonly GRID_HEIGHT: number;
     private readonly MAX_SCORE: number;
 
-    private startGridData: GridData;
-    private endGridData: GridData;
+    private gridData: GridData;
 
     public static readonly GRID_START_BOTTOM = 16;
     public static readonly GRID_START_LEFT = 16;
@@ -37,11 +35,12 @@ export default class Level extends Phaser.Scene {
     private gridSquares?: Phaser.GameObjects.Image[][];
 
     /* ESSENTIAL FUNCTIONS */
-    constructor(levelNumber: number, startGridData: GridData, endGridData: GridData, maxScore: number) {
+    constructor(levelNumber: number, gridData: GridData, maxScore: number) {
 		super(`Level ${levelNumber}`);
-        this.startGridData = startGridData;
-        this.endGridData = endGridData;
+        this.gridData = gridData;
         this.MAX_SCORE = maxScore;
+        this.GRID_HEIGHT = gridData.height;
+        this.GRID_WIDTH = gridData.width;
 	}
 
     init(startGridData: GridData, blockCount: string) {
