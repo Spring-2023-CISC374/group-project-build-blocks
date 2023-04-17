@@ -24,6 +24,7 @@ export default class Level extends Phaser.Scene {
     private crates?: Phaser.Physics.Arcade.Group
     private endCrates?: Phaser.Physics.Arcade.Group
     private crane?: Crane;
+    private toggleVisibleButton?: Phaser.GameObjects.Text;
     private score = 0;
 
     //the background of the scene
@@ -63,6 +64,10 @@ export default class Level extends Phaser.Scene {
         console.log(iframe)
         const contentWnd = iframe.contentWindow as Window  & {scene: Level};
         contentWnd.scene = this;
+
+        this.toggleVisibleButton = this.add.text(100, 100, 'Toggle Crate Visibility');
+        this.toggleVisibleButton.setInteractive();
+        this.toggleVisibleButton.on('pointerup', () => this.toggleCrateVisibility());
 
 
         //TEMP TEXT
@@ -227,6 +232,10 @@ export default class Level extends Phaser.Scene {
             this.add.text(400,300,"YOU WIN!");
         }
         return didWin;
+    }
+    
+    private toggleCrateVisibility(){
+        this.crates?.toggleVisible();
     }
 
     testCode(s: string) {
