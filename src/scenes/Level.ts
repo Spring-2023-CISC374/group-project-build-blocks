@@ -10,8 +10,6 @@ import Crate from '../objects/Crate';
 export default class Level extends Phaser.Scene {
     
     /* SCENE CONSTANTS */
-    private readonly GRID_WIDTH: number;
-    private readonly GRID_HEIGHT: number;
     private readonly MAX_SCORE: number;
 
     private gridData: GridData;
@@ -39,18 +37,7 @@ export default class Level extends Phaser.Scene {
 		super(`Level ${levelNumber}`);
         this.gridData = gridData;
         this.MAX_SCORE = maxScore;
-        this.GRID_HEIGHT = gridData.height;
-        this.GRID_WIDTH = gridData.width;
 	}
-
-    init(startGridData: GridData, blockCount: string) {
-        /*
-        if(startGridData !== null) {
-            this.startGridData = startGridData;
-        }
-        */
-        //this.blockCount = blockCount;
-    }
 
     preload() {
         this.load.image('background', '../assets/TempBackground.png');
@@ -62,7 +49,7 @@ export default class Level extends Phaser.Scene {
         this.load.image('cranePickupBox', '../assets/CranePickupBox.png')
 	}
 
-    create() {
+    protected createLevel() {
 
         //create the background and set the scale
         this.background = this.add.image(this.sys.game.canvas.width / 2, this.sys.game.canvas.height / 2, 'background');
@@ -74,13 +61,13 @@ export default class Level extends Phaser.Scene {
         // create iframe and pass scene to it
         const iframe = document.getElementById('editor') as HTMLIFrameElement;
         console.log(iframe)
-        const contentWnd = iframe.contentWindow as Window  & {scene: BasicScene};
+        const contentWnd = iframe.contentWindow as Window  & {scene: Level};
         contentWnd.scene = this;
 
 
         //TEMP TEXT
-        this.add.text(550, 0, this.blockCount, {color: "black"});
-        this.add.text(350, 0, this.goal, {color: "black"});
+        // this.add.text(550, 0, this.blockCount, {color: "black"});
+        // this.add.text(350, 0, this.goal, {color: "black"});
     }
 
     update(){
@@ -103,14 +90,14 @@ export default class Level extends Phaser.Scene {
     private makeGrid() {
 
         // makes the grid overlay
-        for (let x = 0; x < this.startGridData.width; x++) {
+        for (let x = 0; x < this.gridData.width; x++) {
             
             const newRow = [];
             
-            for (let y = 0; y < this.startGridData.height; y++) {
+            for (let y = 0; y < this.gridData.height; y++) {
                 const newSquare = this.add.image(
-                    BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
-                    (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y, 
+                    Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x, 
+                    (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y, 
                     'gridSquare'
                 );
                 
@@ -128,17 +115,17 @@ export default class Level extends Phaser.Scene {
 
     private placeBlocks(isBlocks: boolean) {
         const crates = this.physics.add.group({ collideWorldBounds: true });
-        for (let x = 0; x < this.GRID_WIDTH; x++) {
-            for (let y = this.GRID_HEIGHT - 1; y >= 0; y--) {
+        for (let x = 0; x < this.gridData.width; x++) {
+            for (let y = this.gridData.height - 1; y >= 0; y--) {
                 console.log("test");
-                switch(isBlocks ? this.startGridData.gridObjects[4-y][x] : this.endGridData.gridObjects[4-y][x]) {
+                switch(isBlocks ? this.gridData.gridObjects[4-y][x] : this.gridData.gridObjectives[4-y][x]) {
                     case "none":
                         break;
                     case "crane":{
                         this.crane = new Crane(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x, 
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,  
+                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x, 
+                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,  
                             false
                         );
                         break;
@@ -146,8 +133,8 @@ export default class Level extends Phaser.Scene {
                     case "crate-brown": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "none"
                         );
@@ -161,8 +148,8 @@ export default class Level extends Phaser.Scene {
                     case "crate-red": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "red"
                         );
@@ -174,8 +161,8 @@ export default class Level extends Phaser.Scene {
                     case "crate-green": {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "green"
                         );
@@ -187,8 +174,8 @@ export default class Level extends Phaser.Scene {
                     case "crate-blue":  {
                         const oneGuy = new Crate(
                             this, 
-                            BasicScene.GRID_START_LEFT + BasicScene.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - BasicScene.GRID_START_BOTTOM) - BasicScene.GRID_SQUARE_SIZE*y,
+                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x,
+                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "blue"
                         );
@@ -235,7 +222,6 @@ export default class Level extends Phaser.Scene {
 
     private checkWin() {
         this.getScore();
-        console.log(this.score)
         const didWin = this.score === this.MAX_SCORE;
         if (didWin) {
             this.add.text(400,300,"YOU WIN!");
