@@ -27,8 +27,6 @@ export default class BasicScene extends Level {
         }
         
 		super(1, GRIDDATA, 3);
-        //instruction area objects
-        this.load.image('instruction-start', '../public/assets/StartInstruction.png');
 	}
 
     create() {

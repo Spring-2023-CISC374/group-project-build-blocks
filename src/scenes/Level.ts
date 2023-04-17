@@ -6,6 +6,8 @@ import BlockLangLexer from '../ANTLR4/generated/BlockLangLexer';
 import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
 import BlockVisitor from '../scripts/utils/BlockVisitor';
 import Crate from '../objects/Crate';
+import Instruction from '../objects/Instruction';
+
 
 export default class Level extends Phaser.Scene {
     
@@ -46,7 +48,8 @@ export default class Level extends Phaser.Scene {
         this.load.image('regCrate', '../assets/regCrate.png');
         this.load.image('craneOpen', '../assets/CraneBasicRed.png');
         this.load.image('craneClosed', '../assets/CraneBasicGreen.png');
-        this.load.image('cranePickupBox', '../assets/CranePickupBox.png')
+        this.load.image('cranePickupBox', '../assets/CranePickupBox.png');
+        this.load.image('instruction-start', '../public/assets/StartInstruction.png');
 	}
 
     
@@ -67,9 +70,9 @@ export default class Level extends Phaser.Scene {
         contentWnd.scene = this;
 
 
-        //TEMP TEXT
-        // this.add.text(550, 0, this.blockCount, {color: "black"});
-        // this.add.text(350, 0, this.goal, {color: "black"});
+        //TEMP DRAG AND DROP ELEMENT
+        const fred = new Instruction(this, 400, 600, "instruction-start", "start");
+        this.add.existing(fred);
     }
 
     update(){
