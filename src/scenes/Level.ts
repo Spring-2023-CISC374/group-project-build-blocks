@@ -108,9 +108,9 @@ export default class Level extends Phaser.Scene {
         }
 
         // makes the game objects
-        this.crates = this.placeBlocks(true);
         this.endCrates = this.placeBlocks(false);
         this.endCrates.setAlpha(0.5);
+        this.crates = this.placeBlocks(true);
     }
 
     private placeBlocks(isBlocks: boolean) {
