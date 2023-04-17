@@ -6,4 +6,6 @@ export interface GridData {
     height: number;
 
     gridObjects: LevelObject[][];
+
+    gridObjectives: LevelObject[][];
 }
