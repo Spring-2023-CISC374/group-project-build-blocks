@@ -10,7 +10,7 @@ export default class Instruction extends Phaser.GameObjects.Image {
     
     private loopNum = 0;
 
-    private nextInstruction?: Instruction;
+    public nextInstruction?: Instruction;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, instructionType: InstructionType) {
         super(scene, x, y, texture);
@@ -46,13 +46,12 @@ export default class Instruction extends Phaser.GameObjects.Image {
             this.x = dragX;
             this.y = dragY;
         }
+
         //if there is a child update it (NEEDS TO BE OFFSET STILL)
-        /*
         if(this.nextInstruction !== undefined) {
             console.log("moving childs");
-            this.nextInstruction.handleDrag(mouse, gameObject, dragX, dragY + 32);
+            this.nextInstruction.handleDrag(mouse, this.nextInstruction, dragX, dragY + 32);
         }
-        */
     }    
    
 }

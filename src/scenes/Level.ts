@@ -72,9 +72,10 @@ export default class Level extends Phaser.Scene {
         //TEMP DRAG AND DROP ELEMENT
         const fred = new Instruction(this, 400, 600, "instruction-start", "start");
         this.add.existing(fred);
-        fred.rotation = -1.6;
         const burt = new Instruction(this, 400, 200, "instruction-start", "start");
         this.add.existing(burt);
+        fred.nextInstruction = burt;
+        
     }
 
     update(){
