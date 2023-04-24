@@ -161,7 +161,7 @@ export default class Level extends Phaser.Scene {
                             Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x, 
                             (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,  
                             false
-                        );
+                        ).setPushable(false);
                         break;
                     }
                     case "crate-brown": {
@@ -176,7 +176,7 @@ export default class Level extends Phaser.Scene {
                             oneGuy.setAlpha(0.5);
                         }
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        crates.add(oneGuy.setPushable(false));
                         break;
                     }    
                     case "crate-red": {
@@ -189,7 +189,7 @@ export default class Level extends Phaser.Scene {
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        crates.add(oneGuy.setPushable(false));
                         break;
                     } 
                     case "crate-green": {
@@ -202,7 +202,7 @@ export default class Level extends Phaser.Scene {
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        crates.add(oneGuy.setPushable(false));
                         break;
                     } 
                     case "crate-blue":  {
@@ -215,7 +215,7 @@ export default class Level extends Phaser.Scene {
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        crates.add(oneGuy.setPushable(false));
                         break;
                     } 
                     default: {
@@ -226,7 +226,7 @@ export default class Level extends Phaser.Scene {
         }
         this.physics.add.collider(crates, crates)
         if(this.crane !== undefined && isBlocks) {
-            this.physics.add.collider(this.crane, crates);
+            this.physics.add.collider(this.crane, crates, (_crane, crate) => {});
         }
         return crates;
     }
