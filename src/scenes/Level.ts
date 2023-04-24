@@ -10,7 +10,7 @@ import Crate from '../objects/Crate';
 export default class Level extends Phaser.Scene {
     
     /* SCENE CONSTANTS */
-    private readonly MAX_SCORE: number;
+    private MAX_SCORE: number;
 
     private gridData: GridData;
 
@@ -32,24 +32,29 @@ export default class Level extends Phaser.Scene {
     //the 2D grid of the building area [x][y] with 0,0 being bottom left
     private gridSquares?: Phaser.GameObjects.Image[][];
 
+    
+    constructor(){
+		super(`level`);
+    }
+
     /* ESSENTIAL FUNCTIONS */
-    constructor(levelNumber: number, gridData: GridData, maxScore: number) {
-		super(`Level ${levelNumber}`);
-        this.gridData = gridData;
-        this.MAX_SCORE = maxScore;
+    init(data:{levelNumber: number, gridData: GridData, maxScore: number}) {
+        this.gridData = data.gridData;
+        this.MAX_SCORE = data.maxScore;
 	}
 
     preload() {
         this.load.image('background', '../assets/TempBackground.png');
         this.load.image('gridSquare', '../assets/GridSquare.png');
-
-        this.load.image('regCrate', '../assets/regCrate.png');
+        this.load.image('regCrate', '../assets/RegCrate.png');
         this.load.image('craneOpen', '../assets/CraneBasicRed.png');
         this.load.image('craneClosed', '../assets/CraneBasicGreen.png');
         this.load.image('cranePickupBox', '../assets/CranePickupBox.png')
 	}
 
-    protected createLevel() {
+    // create(){
+    // }
+    create() {
 
         //create the background and set the scale
         this.background = this.add.image(this.sys.game.canvas.width / 2, this.sys.game.canvas.height / 2, 'background');
@@ -71,6 +76,10 @@ export default class Level extends Phaser.Scene {
     }
 
     update(){
+        // if key esc then goto level select
+        if (this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC).isDown) {
+            this.scene.start('LevelSelectScene');
+        }
         if(this.crane !== undefined) {
             if(!this.physics.overlap(this.crane.PICKUP_BOX, this.crates, (_box, crate) => {
                     if(this.crane !== undefined) {
