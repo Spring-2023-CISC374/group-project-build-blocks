@@ -1,11 +1,11 @@
 import Phaser from 'phaser'
-import Crane from '../objects/Crane';
+import Crane from './Crane';
 import { GridData } from '../interfaces/GridData';
 import { CharStream, CommonTokenStream } from 'antlr4';
 import BlockLangLexer from '../ANTLR4/generated/BlockLangLexer';
 import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
 import BlockVisitor from '../scripts/utils/BlockVisitor';
-import Crate from '../objects/Crate';
+import Crate from './Crate';
 
 export default class Level extends Phaser.Scene {
     
@@ -29,9 +29,7 @@ export default class Level extends Phaser.Scene {
 
     //the background of the scene
     private background?: Phaser.GameObjects.Image
-    
-    //the 2D grid of the building area [x][y] with 0,0 being bottom left
-    private gridSquares?: Phaser.GameObjects.Image[][];
+
 
     /* ESSENTIAL FUNCTIONS */
     constructor(levelNumber: number, gridData: GridData, maxScore: number) {

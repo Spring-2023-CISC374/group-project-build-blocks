@@ -1,5 +1,5 @@
 import { GridData } from '../interfaces/GridData';
-import Level from './Level';
+import Level from '../objects/Level';
 
 export default class Level2 extends Level {
 
