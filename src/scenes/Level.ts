@@ -35,6 +35,8 @@ export default class Level extends Phaser.Scene {
     
     constructor(){
 		super(`level`);
+        this.MAX_SCORE = 0;
+        this.gridData = {width: 0, height: 0, gridObjects: [], gridObjectives: []}; 
     }
 
     /* ESSENTIAL FUNCTIONS */
@@ -69,6 +71,29 @@ export default class Level extends Phaser.Scene {
         const contentWnd = iframe.contentWindow as Window  & {scene: Level};
         contentWnd.scene = this;
 
+        // const levelSelectButton = this.add.rectangle(100 + (i % 6) * 100, 100 + Math.floor(i / 6) * 100, 80, 80, 0x204060, 1);
+        
+        // create button to goto level select, on top right corner
+        const levelSelectButton = this.add.rectangle(this.sys.game.canvas.width-80, 30, 140, 30, 0x204060, 1);
+
+        levelSelectButton.setInteractive();
+        levelSelectButton.on('pointerover', () => {
+            levelSelectButton.setFillStyle(0x204060, 0.6);
+        });
+        levelSelectButton.on('pointerout', () => {
+            levelSelectButton.setFillStyle(0x204060, 1);
+        });
+        const levelSelectText = this.add.text(this.sys.game.canvas.width-80, 30, `level select`, {
+            fontSize: '18px',
+            color: '#fff',
+        });
+
+        levelSelectText.setOrigin(0.5);
+
+        levelSelectButton.on('pointerdown', () => {
+            this.scene.start(`LevelSelectScene`);
+        });
+
 
         //TEMP TEXT
         // this.add.text(550, 0, this.blockCount, {color: "black"});
@@ -76,10 +101,10 @@ export default class Level extends Phaser.Scene {
     }
 
     update(){
-        // if key esc then goto level select
-        if (this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC).isDown) {
-            this.scene.start('LevelSelectScene');
-        }
+        // // if key esc then goto level select
+        // if (this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC).isDown) {
+        //     this.scene.start('LevelSelectScene');
+        // }
         if(this.crane !== undefined) {
             if(!this.physics.overlap(this.crane.PICKUP_BOX, this.crates, (_box, crate) => {
                     if(this.crane !== undefined) {
