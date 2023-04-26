@@ -53,7 +53,8 @@ export default class Level extends Phaser.Scene {
         this.load.image('regCrate', '../assets/regCrate.png');
         this.load.image('craneOpen', '../assets/CraneBasicRed.png');
         this.load.image('craneClosed', '../assets/CraneBasicGreen.png');
-        this.load.image('cranePickupBox', '../assets/CranePickupBox.png')
+        this.load.image('cranePickupBox', '../assets/CranePickupBox.png');
+        this.load.spritesheet('visibilityButton', '../assets/VisibilityButtons.png', {frameWidth: 48, frameHeight: 32});
 	}
 
     protected createLevel() {

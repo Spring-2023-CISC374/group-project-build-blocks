@@ -17,9 +17,10 @@ export default class Grid {
     public crane?: Crane;
     public crates?: Phaser.Physics.Arcade.Group
     public endCrates?: Phaser.Physics.Arcade.Group
-    private toggleVisibleButton?: Phaser.GameObjects.Text;
+    private toggleVisibleButton?: Phaser.GameObjects.Sprite;
 
     public gridVars: GridVars
+    private isVisible: boolean;
 
     /**
      * A grid object
@@ -47,6 +48,7 @@ export default class Grid {
                 GridData
             );
         }
+        this.isVisible = true;
     }
     /* HELPER FUNCTIONS */
 
@@ -76,14 +78,19 @@ export default class Grid {
         if (this.isPrimaryGrid) {
             this.crates = this.placeBlocks(true);
             
-            this.toggleVisibleButton = this.scene.add.text(
+            this.toggleVisibleButton = this.scene.add.sprite(
                 this.gridVars.GRID_MID_HORIZONTAL,
                 this.scene.sys.game.canvas.height - (this.gridVars.GRID_END_TOP + 20),
-                'Toggle Crate Visibility'
-            );
-            this.toggleVisibleButton.setOrigin(0.5);
+                'visibilityButton'
+            ).setFrame(1);
             this.toggleVisibleButton.setInteractive();
-            this.toggleVisibleButton.on('pointerup', () => this.crates?.toggleVisible());
+            this.toggleVisibleButton.on('pointerup', () => {
+                console.log('clicked');
+                this.isVisible = !this.isVisible;
+                this.crates?.setVisible(this.isVisible);
+                this.toggleVisibleButton?.setFrame(this.isVisible ? 1 : 0);
+            });
+            this.toggleVisibleButton.setOrigin(0.8);
         }
     }
 
