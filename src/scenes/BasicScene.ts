@@ -24,7 +24,6 @@ export default class BasicScene extends Level {
                 ["none", "none", "crate-brown", "none", "none"]
             ]
         }
-        
 
 		super(1, GRIDDATA, 3);
 	}

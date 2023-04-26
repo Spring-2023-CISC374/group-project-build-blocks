@@ -1,18 +1,46 @@
 import { GridData } from './../interfaces/GridData';
 import Phaser from "phaser";
+import Crane from './Crane';
+import Crate from './Crate';
+import Level from './Level';
+import { GridVars } from '../interfaces/GridVars';
 
-export default class Grid extends Phaser.Physics.Arcade.Group {
-    //the 2D grid of the building area [x][y] with 0,0 being bottom left
+export default class Grid {
+
+    private scene: Phaser.Scene;
+
+    // Grid Variables
+    private gridData: GridData;
+    private isPrimaryGrid: boolean;
+    
     private gridSquares?: Phaser.GameObjects.Image[][];
-    private gridData?: GridData;
+    public crane?: Crane;
+    public crates?: Phaser.Physics.Arcade.Group
+    public endCrates?: Phaser.Physics.Arcade.Group
+    private toggleVisibleButton?: Phaser.GameObjects.Text;
 
-    constructor (GridData: GridData, world: Phaser.Physics.Arcade.World, scene: Phaser.Scene) {
-        super(world, scene)
+    public gridVars: GridVars
+
+    /**
+     * A grid object
+     * @param GridData - GridData
+     * @param isPrimaryGrid - boolean: is grid with movable blocks or the solution template
+     * @param world - Phaser.Physics.Arcade.World
+     * @param scene - Phaser.Scene
+     */
+    constructor (GridData: GridData, isPrimaryGrid: boolean, scene: Phaser.Scene) {
+        this.scene = scene;
+        this.isPrimaryGrid = isPrimaryGrid;
         this.gridData = GridData;
+        if (this.isPrimaryGrid) {
+            this.gridVars = Level.PrimaryGridVars;
+        } else {
+            this.gridVars = Level.SecondaryGridVars;
+        }
     }
     /* HELPER FUNCTIONS */
 
-    private makeGrid() {
+    public makeGrid() {
 
         // makes the grid overlay
         for (let x = 0; x < this.gridData.width; x++) {
@@ -20,9 +48,9 @@ export default class Grid extends Phaser.Physics.Arcade.Group {
             const newRow = [];
             
             for (let y = 0; y < this.gridData.height; y++) {
-                const newSquare = this.add.image(
-                    Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x, 
-                    (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y, 
+                const newSquare = this.scene.add.image(
+                    this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x, 
+                    (this.scene.sys.game.canvas.height - this.gridVars.GRID_START_BOTTOM) - this.gridVars.GRID_SQUARE_SIZE*y, 
                     'gridSquare'
                 );
                 
@@ -35,11 +63,13 @@ export default class Grid extends Phaser.Physics.Arcade.Group {
         // makes the game objects
         this.endCrates = this.placeBlocks(false);
         this.endCrates.setAlpha(0.5);
-        this.crates = this.placeBlocks(true);
+        if (this.isPrimaryGrid) {
+            this.crates = this.placeBlocks(true);
+        }
     }
 
     private placeBlocks(isBlocks: boolean) {
-        const crates = this.physics.add.group({ collideWorldBounds: true });
+        const crates = this.scene.physics.add.group({ collideWorldBounds: true });
         for (let x = 0; x < this.gridData.width; x++) {
             for (let y = this.gridData.height - 1; y >= 0; y--) {
                 console.log("test");
@@ -48,18 +78,18 @@ export default class Grid extends Phaser.Physics.Arcade.Group {
                         break;
                     case "crane":{
                         this.crane = new Crane(
-                            this, 
-                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x, 
-                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,  
+                            this.scene, 
+                            this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x, 
+                            (this.scene.sys.game.canvas.height - this.gridVars.GRID_START_BOTTOM) - this.gridVars.GRID_SQUARE_SIZE*y,  
                             false
                         );
                         break;
                     }
                     case "crate-brown": {
                         const oneGuy = new Crate(
-                            this, 
-                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,
+                            this.scene, 
+                            this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x,
+                            (this.scene.sys.game.canvas.height - this.gridVars.GRID_START_BOTTOM) - this.gridVars.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "none"
                         );
@@ -72,9 +102,9 @@ export default class Grid extends Phaser.Physics.Arcade.Group {
                     }    
                     case "crate-red": {
                         const oneGuy = new Crate(
-                            this, 
-                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,
+                            this.scene, 
+                            this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x,
+                            (this.scene.sys.game.canvas.height - this.gridVars.GRID_START_BOTTOM) - this.gridVars.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "red"
                         );
@@ -85,9 +115,9 @@ export default class Grid extends Phaser.Physics.Arcade.Group {
                     } 
                     case "crate-green": {
                         const oneGuy = new Crate(
-                            this, 
-                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,
+                            this.scene, 
+                            this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x,
+                            (this.scene.sys.game.canvas.height - this.gridVars.GRID_START_BOTTOM) - this.gridVars.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "green"
                         );
@@ -98,9 +128,9 @@ export default class Grid extends Phaser.Physics.Arcade.Group {
                     } 
                     case "crate-blue":  {
                         const oneGuy = new Crate(
-                            this, 
-                            Level.GRID_START_LEFT + Level.GRID_SQUARE_SIZE*x,
-                            (this.sys.game.canvas.height - Level.GRID_START_BOTTOM) - Level.GRID_SQUARE_SIZE*y,
+                            this.scene, 
+                            this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x,
+                            (this.scene.sys.game.canvas.height - this.gridVars.GRID_START_BOTTOM) - this.gridVars.GRID_SQUARE_SIZE*y,
                             "regCrate",
                             "blue"
                         );
@@ -115,9 +145,9 @@ export default class Grid extends Phaser.Physics.Arcade.Group {
                 }
             }
         }
-        this.physics.add.collider(crates, crates)
+        this.scene.physics.add.collider(crates, crates)
         if(this.crane !== undefined && isBlocks) {
-            this.physics.add.collider(this.crane, crates);
+            this.scene.physics.add.collider(this.crane, crates);
         }
         return crates;
     }
