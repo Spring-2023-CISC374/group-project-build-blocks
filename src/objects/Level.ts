@@ -46,9 +46,6 @@ export default class Level extends Phaser.Scene {
     constructor(levelNumber: number, gridData: GridData, maxScore: number) {
 		super(`Level ${levelNumber}`);
         this.grid = new Grid(gridData, true, this);
-        this.crates = this.grid.crates;
-        this.endCrates = this.grid.endCrates;
-        this.crane = this.grid.crane;
         this.secondaryGrid = new Grid(gridData, false, this);
         this.MAX_SCORE = maxScore;
 	}
@@ -69,8 +66,12 @@ export default class Level extends Phaser.Scene {
         this.background = this.add.image(this.sys.game.canvas.width / 2, this.sys.game.canvas.height / 2, 'background');
         this.background.setScale(this.sys.game.canvas.width, this.sys.game.canvas.height);
 
-        //create the grid for the building area and store it in gridSquares
+        // Create Grid and pass handlers
         this.grid.makeGrid();
+        this.crates = this.grid.crates;
+        this.endCrates = this.grid.endCrates;
+        this.crane = this.grid.crane;
+
         this.secondaryGrid.makeGrid();
 
         // create iframe and pass scene to it
