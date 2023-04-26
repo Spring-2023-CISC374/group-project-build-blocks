@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import Crane from './Crane';
 import Crate from './Crate';
 import Level from './Level';
-import { GridVars } from '../interfaces/GridVars';
+import { GridVars, fillGridVars } from '../interfaces/GridVars';
 
 export default class Grid {
 
@@ -33,9 +33,19 @@ export default class Grid {
         this.isPrimaryGrid = isPrimaryGrid;
         this.gridData = GridData;
         if (this.isPrimaryGrid) {
-            this.gridVars = Level.PrimaryGridVars;
+            this.gridVars = fillGridVars(
+                Level.P_GRID_START_BOTTOM, 
+                Level.P_GRID_START_LEFT, 
+                Level.P_GRID_SQUARE_SIZE, 
+                GridData
+            );
         } else {
-            this.gridVars = Level.SecondaryGridVars;
+            this.gridVars = fillGridVars(
+                Level.S_GRID_START_BOTTOM, 
+                Level.S_GRID_START_LEFT, 
+                Level.S_GRID_SQUARE_SIZE, 
+                GridData
+            );
         }
     }
     /* HELPER FUNCTIONS */
@@ -65,6 +75,15 @@ export default class Grid {
         this.endCrates.setAlpha(0.5);
         if (this.isPrimaryGrid) {
             this.crates = this.placeBlocks(true);
+            
+            this.toggleVisibleButton = this.scene.add.text(
+                this.gridVars.GRID_MID_HORIZONTAL,
+                this.scene.sys.game.canvas.height - (this.gridVars.GRID_END_TOP + 20),
+                'Toggle Crate Visibility'
+            );
+            this.toggleVisibleButton.setOrigin(0.5);
+            this.toggleVisibleButton.setInteractive();
+            this.toggleVisibleButton.on('pointerup', () => this.crates?.toggleVisible());
         }
     }
 

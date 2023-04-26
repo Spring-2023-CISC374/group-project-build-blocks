@@ -7,7 +7,6 @@ import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
 import BlockVisitor from '../scripts/utils/BlockVisitor';
 import Crate from './Crate';
 import Grid from './Grid';
-import { GridVars } from '../interfaces/GridVars';
 
 export default class Level extends Phaser.Scene {
     
@@ -17,17 +16,14 @@ export default class Level extends Phaser.Scene {
     private grid: Grid;
     private secondaryGrid: Grid;
 
-    public static readonly PrimaryGridVars: GridVars = {
-        GRID_START_BOTTOM: 16,
-        GRID_START_LEFT: 16,
-        GRID_SQUARE_SIZE: 32
-    }
+    public static readonly P_GRID_START_BOTTOM = 16;
+    public static readonly P_GRID_START_LEFT = 16;
+    public static readonly P_GRID_SQUARE_SIZE = 32;    
 
-    public static readonly SecondaryGridVars: GridVars = {
-        GRID_START_BOTTOM: 16,
-        GRID_START_LEFT: 300,
-        GRID_SQUARE_SIZE: 32
-    }
+    
+    public static readonly S_GRID_START_BOTTOM = 16;
+    public static readonly S_GRID_START_LEFT = 300;
+    public static readonly S_GRID_SQUARE_SIZE = 32;
 
 
     /* SCENE VARIABLES */
@@ -79,10 +75,6 @@ export default class Level extends Phaser.Scene {
         console.log(iframe)
         const contentWnd = iframe.contentWindow as Window  & {scene: Level};
         contentWnd.scene = this;
-
-        this.toggleVisibleButton = this.add.text(100, 100, 'Toggle Crate Visibility');
-        this.toggleVisibleButton.setInteractive();
-        this.toggleVisibleButton.on('pointerup', () => this.toggleCrateVisibility());
 
 
         //TEMP TEXT
@@ -136,10 +128,6 @@ export default class Level extends Phaser.Scene {
             this.add.text(400,300,"YOU WIN!");
         }
         return didWin;
-    }
-    
-    private toggleCrateVisibility(){
-        this.crates?.toggleVisible();
     }
 
     testCode(s: string) {
