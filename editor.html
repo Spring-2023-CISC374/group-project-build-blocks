@@ -88,20 +88,100 @@
 		const editor = ace.edit("editor");
 		const parse = document.getElementById("parse");
 
+		ace.define("ace/mode/blocklang_highlight_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"], function (require, exports, module) {
+			var oop = require("../lib/oop");
+			var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+			var BlockLangHighlightRules = function () {
+
+				var loopStatement = "loop\\s*";
+				var actionStatement = "\\b(grab|close|release|open)\\b";
+				var moveStatement = "\\b(up|down|left|right)\\b";
+
+				this.$rules = {
+					"start": [
+						{
+							token: "keyword",
+							regex: loopStatement,
+							next: "loop"
+						},
+						{
+							token: "language.function",
+							regex: actionStatement
+						},
+						{
+							token: "keyword.control",
+							regex: moveStatement
+						},
+						{
+							token: "keyword",
+							regex: "endloop\\s*"
+						}
+					],
+					"loop": [
+						{
+							token: "constant.numeric",
+							regex: "\\d+",
+							next:"start"
+						}
+					]
+				};
+			};
+
+			oop.inherits(BlockLangHighlightRules, TextHighlightRules);
+
+			exports.BlockLangHighlightRules = BlockLangHighlightRules;
+		});
+
+		ace.define("ace/mode/blocklang", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/mode/blocklang_highlight_rules"], function(require, exports, module) {
+			var oop = require("../lib/oop");
+			var TextMode = require("./text").Mode;
+			var BlockLangHighlightRules = require("./blocklang_highlight_rules").BlockLangHighlightRules;
+
+			var Mode = function() {
+				this.HighlightRules = BlockLangHighlightRules;
+				this.$behaviour = this.$defaultBehaviour;
+			};
+			oop.inherits(Mode, TextMode);
+
+			(function() {
+				this.lineCommentStart = "//";
+
+				this.getNextLineIndent = function(state, line, tab) {
+					var indent = this.$getIndent(line);
+					var match = line.match(/^\s*(?:loop|endloop)/);
+					console.log(match)
+					if (match && match[0] === "endloop") {
+						indent = indent.substring(tab.length);
+					}
+					if (match && match[0] === "loop") {
+						indent += tab;
+					}
+					return indent;
+				};
+
+				this.$id = "ace/mode/blocklang";
+			}).call(Mode.prototype);
+
+			exports.Mode = Mode;
+		});
+		ace.config.setModuleUrl("ace/mode/blocklang_highlight_rules", "/path/to/blocklang_highlight_rules.js");
+		ace.config.setModuleUrl("ace/mode/blocklang", "/path/to/blocklang.js");
+		editor.session.setMode("ace/mode/blocklang");
 		editor.setOptions({
 			enableBasicAutocompletion: [{
 				getCompletions: (editor, session, pos, prefix, callback) => {
 					callback(null, [
 						{ value: 'up', meta: 'move crane up' },
-						{ value: 'down', meta:'move crane down'},
+						{ value: 'down', meta: 'move crane down' },
 						{ value: 'left', meta: 'move crane left' },
-						{ value: 'right', meta:'move crane right'},
+						{ value: 'right', meta: 'move crane right' },
 						{ value: 'release', meta: 'release crate' },
-						{ value: 'grab', meta:'grab crate'},
+						{ value: 'grab', meta: 'grab crate' },
 						{ value: 'open', meta: 'release crate' },
-						{ value: 'close', meta:'grab crate'},	
-						{ value: 'loop ', meta: 'loop N'},
-						{ value: 'endloop', meta: 'loop N'}
+						{ value: 'close', meta: 'grab crate' },
+						{ value: 'loop ', meta: 'loop N' },
+						{ value: 'endloop', meta: 'loop N' }
 					]);
 				},
 			}],
@@ -111,6 +191,7 @@
 		});
 		editor.setTheme("ace/theme/monokai");
 		console.log(editor);
+		editor.setShowInvisibles(true);
 		editor.resize();
 		editor.setShowPrintMargin(false);
 		editor.setFontSize(18);
