@@ -65,13 +65,15 @@ export default class BlockVisitor extends BlockLangVisitor<void> {
 		// console.log('visitActionStatement', ctx);
 		switch (ctx.getText()) {
 			case 'open':
+			case 'release':
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.release()});
-				this.timing += Crane.MOVEMENT_TIME + 1000;
+				this.timing += Crane.MOVEMENT_TIME + 500;
 				console.log('open', this.timing);
 				break;
 			case 'close':
+			case 'grab':
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.grab()});
-				this.timing += Crane.MOVEMENT_TIME + 1000;
+				this.timing += Crane.MOVEMENT_TIME + 500;
 				console.log('close', this.timing);
 				break;
 			default:
@@ -90,25 +92,25 @@ export default class BlockVisitor extends BlockLangVisitor<void> {
 		switch (ctx.getText()) {
 			case 'up':
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.moveUp()});
-				this.timing += Crane.MOVEMENT_TIME + 1000;
+				this.timing += Crane.MOVEMENT_TIME + 500;
 				console.log('move up', this.timing);
 				break;
 			case 'down':
 				// this.crane?.moveDown();
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.moveDown()});
-				this.timing += Crane.MOVEMENT_TIME + 1000;
+				this.timing += Crane.MOVEMENT_TIME + 500;
 				console.log('move down', this.timing);
 				break;
 			case 'left':
 				// this.crane?.moveLeft();
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.moveLeft()});
-				this.timing += Crane.MOVEMENT_TIME + 1000;
+				this.timing += Crane.MOVEMENT_TIME + 500;
 				console.log('move leftr', this.timing);
 				break;
 			case 'right':
 				// this.crane?.moveRight();
 				this.scene?.time.delayedCall(this.timing, () => {this.scene?.crane?.moveRight()});
-				this.timing += Crane.MOVEMENT_TIME + 1000;
+				this.timing += Crane.MOVEMENT_TIME + 500;
 				console.log('move roigiht', this.timing);
 				break;
 			default:

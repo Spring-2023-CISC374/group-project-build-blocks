@@ -18,8 +18,8 @@ export default class Crate extends Phaser.Physics.Arcade.Sprite {
     public setColor(color: Color) {
         this.color = color;
         switch(this.color) {
-            case "none":
-                this.clearTint;
+            case "brown":
+                this.clearTint();
                 break;
             case "red":
                 this.setTint(0xFF0000);
@@ -31,7 +31,7 @@ export default class Crate extends Phaser.Physics.Arcade.Sprite {
                 this.setTint(0x0A3EFF);
                 break;
             default:
-                this.clearTint;
+                this.clearTint();
                 break;
           }
     }

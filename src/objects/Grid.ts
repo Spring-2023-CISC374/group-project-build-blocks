@@ -2,8 +2,9 @@ import { GridData } from './../interfaces/GridData';
 import Phaser from "phaser";
 import Crane from './Crane';
 import Crate from './Crate';
-import Level from './Level';
+import Level from '../scenes/Level';
 import { GridVars, fillGridVars } from '../interfaces/GridVars';
+import { LevelObject } from '../types/LevelObject';
 
 export default class Grid {
 
@@ -51,6 +52,32 @@ export default class Grid {
         this.isVisible = true;
     }
     /* HELPER FUNCTIONS */
+
+    getGoalText(): string {
+		let result = "GOAL\n";
+  		const legend = "\nE = empty\nC = crane\nT = tan\nR = Red\nG = green\nB = blue";
+  
+		const symbolMap = {
+			"none": "E",
+			"crate-brown": "T",
+			"crate-red": "R",
+			"crate-green": "G",
+			"crate-blue": "B",
+			"crane": "C"
+		  };
+
+		  for (let i = 0; i < this.gridData.gridObjectives.length; i++) {
+			for (let j = 0; j < this.gridData.gridObjectives[i].length; j++) {
+			  const symbol = symbolMap[this.gridData.gridObjectives[i][j]] || "?";
+			  result += symbol + " ";
+			}
+			result += "\n";
+		  }
+		  
+		  result += legend;
+
+		  return result;
+	}
 
     public makeGrid() {
 
@@ -117,7 +144,7 @@ export default class Grid {
                             this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x,
                             (this.scene.sys.game.canvas.height - this.gridVars.GRID_START_BOTTOM) - this.gridVars.GRID_SQUARE_SIZE*y,
                             "regCrate",
-                            "none"
+                            "brown"
                         );
                         if (!isBlocks) {
                             oneGuy.setAlpha(0.5);
