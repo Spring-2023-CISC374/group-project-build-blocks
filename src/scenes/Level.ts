@@ -8,15 +8,13 @@ import BlockVisitor from '../scripts/utils/BlockVisitor';
 import Crate from '../objects/Crate';
 import Grid from '../objects/Grid';
 
-import { LevelObject } from '../types/LevelObject';
-
 export default class Level extends Phaser.Scene {
     
     /* SCENE CONSTANTS */
-    private MAX_SCORE?: number;
+    private MAX_SCORE: number;
 
-    private grid?: Grid;
-    private secondaryGrid?: Grid;
+    private grid: Grid;
+    private secondaryGrid: Grid;
 
     public static readonly P_GRID_START_BOTTOM = 16;
     public static readonly P_GRID_START_LEFT = 16;
@@ -32,8 +30,8 @@ export default class Level extends Phaser.Scene {
 
     private crates?: Phaser.Physics.Arcade.Group
     private endCrates?: Phaser.Physics.Arcade.Group
-    private crane?: Crane;
-    private toggleVisibleButton?: Phaser.GameObjects.Text;
+    private crane: Crane;
+    // private toggleVisibleButton?: Phaser.GameObjects.Text;
     private score = 0;
 
     //the background of the scene
@@ -46,11 +44,11 @@ export default class Level extends Phaser.Scene {
 
     constructor(){
 		super(`level`);
-        // this.grid = new Grid(gridData, true, this);
-        // this.secondaryGrid = new Grid(gridData, false, this);
-        // this.MAX_SCORE = maxScore;
     }
 
+    get getCrane(){
+        return this.crane;
+    }
     init(data:{levelNumber: number, gridData: GridData, maxScore: number}) {
         console.log(data)
         this.grid = new Grid(data.gridData, true, this);
@@ -173,26 +171,26 @@ export default class Level extends Phaser.Scene {
         return didWin;
     }
 
-    testCode(s: string) {
+    execute(s: string) {
         const input = s;
         const chars = new CharStream(input);
         const lexer = new BlockLangLexer(chars);
         const tokens = new CommonTokenStream(lexer);
         const parser = new BlockLangParser(tokens);
-        let error = "";
-        lexer.removeErrorListeners();
-        lexer.addErrorListener({
-            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
-                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
-            }
-        });
-        parser.buildParseTrees = true;
-        parser.removeErrorListeners();
-        parser.addErrorListener({
-            syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
-                error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
-            }
-        });
+        // let _error = "";
+        // lexer.removeErrorListeners();
+        // lexer.addErrorListener({
+        //     syntaxError: (_recognizer, _offendingSymbol, line, column, msg, _e) => {
+        //         _error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+        //     }
+        // });
+        // parser.buildParseTrees = true;
+        // parser.removeErrorListeners();
+        // parser.addErrorListener({
+        //     syntaxError: (_recognizer, _offendingSymbol, line, column, msg, _e) => {
+        //         _error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
+        //     }
+        // });
         const tree = parser.program();
         const visitor = new BlockVisitor(null, this);
         console.log(visitor.visit(tree));

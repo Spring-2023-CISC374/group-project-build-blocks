@@ -1,7 +1,4 @@
 import Phaser from 'phaser'
-
-import BasicScene from './scenes/BasicScene'
-import Level2 from './scenes/Level2'
 import Level from './scenes/Level'
 import LevelSelectScene from './scenes/LevelSelectScene'
 

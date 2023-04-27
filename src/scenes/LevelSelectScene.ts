@@ -1,7 +1,5 @@
 import Phaser from 'phaser'
 import { GridData } from '../interfaces/GridData';
-// import Level from '../scenes/Level'
-import Level from './Level'
 
 export default class LevelSelectScene extends Phaser.Scene {
 

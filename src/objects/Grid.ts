@@ -4,7 +4,6 @@ import Crane from './Crane';
 import Crate from './Crate';
 import Level from '../scenes/Level';
 import { GridVars, fillGridVars } from '../interfaces/GridVars';
-import { LevelObject } from '../types/LevelObject';
 
 export default class Grid {
 
@@ -15,7 +14,7 @@ export default class Grid {
     private isPrimaryGrid: boolean;
     
     private gridSquares?: Phaser.GameObjects.Image[][];
-    public crane?: Crane;
+    public crane: Crane;
     public crates?: Phaser.Physics.Arcade.Group
     public endCrates?: Phaser.Physics.Arcade.Group
     private toggleVisibleButton?: Phaser.GameObjects.Sprite;
