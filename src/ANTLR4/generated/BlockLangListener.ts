@@ -1,4 +1,5 @@
 // Generated from BlockLang.g4 by ANTLR 4.12.0
+// @ts-nocheck
 
 import {ParseTreeListener} from "antlr4";
 

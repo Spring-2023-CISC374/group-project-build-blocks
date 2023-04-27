@@ -1,5 +1,6 @@
 // Generated from BlockLang.g4 by ANTLR 4.12.0
 // noinspection ES6UnusedImports,JSUnusedGlobalSymbols,JSUnusedLocalSymbols
+// @ts-nocheck
 
 import {
 	ATN,
