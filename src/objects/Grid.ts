@@ -150,7 +150,7 @@ export default class Grid {
                             oneGuy.setAlpha(0.5);
                         }
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        crates.add(oneGuy.setPushable(false));
                         break;
                     }    
                     case "crate-red": {
@@ -163,7 +163,7 @@ export default class Grid {
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        crates.add(oneGuy.setPushable(false));
                         break;
                     } 
                     case "crate-green": {
@@ -176,7 +176,7 @@ export default class Grid {
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        crates.add(oneGuy.setPushable(false));
                         break;
                     } 
                     case "crate-blue":  {
@@ -189,7 +189,7 @@ export default class Grid {
                         );
                         
                         oneGuy.refreshBody();
-                        crates.add(oneGuy);
+                        crates.add(oneGuy.setPushable(false));
                         break;
                     } 
                     default: {
