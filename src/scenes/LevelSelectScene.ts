@@ -51,6 +51,12 @@ export default class LevelSelectScene extends Phaser.Scene {
         this.load.spritesheet('visibilityButton', 'assets/VisibilityButtons.png', {frameWidth: 48, frameHeight: 32});
 		
 		this.load.image('instruction-start', '../public/assets/StartInstruction.png');
+		this.load.image('instruction-loop', '../public/assets/LoopInstruction.png');
+		this.load.image('instruction-endloop', '../public/assets/EndloopInstruction.png');
+		this.load.image('instruction-up', '../public/assets/UpInstruction.png');
+		this.load.image('instruction-down', '../public/assets/DownInstruction.png');
+		this.load.image('instruction-left', '../public/assets/LeftInstruction.png');
+		this.load.image('instruction-right', '../public/assets/RightInstruction.png');
 	}
 
 	create() {
