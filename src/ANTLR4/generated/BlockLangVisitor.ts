@@ -1,6 +1,6 @@
 // Generated from BlockLang.g4 by ANTLR 4.12.0
 // @ts-nocheck
-
+//
 import {ParseTreeVisitor} from 'antlr4';
 
 
@@ -9,6 +9,8 @@ import { StatementContext } from "./BlockLangParser";
 import { LoopStatementContext } from "./BlockLangParser";
 import { MoveStatementContext } from "./BlockLangParser";
 import { ActionStatementContext } from "./BlockLangParser";
+import { GrabActionContext } from "./BlockLangParser";
+import { ReleaseActionContext } from "./BlockLangParser";
 
 
 /**
@@ -49,5 +51,17 @@ export default class BlockLangVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitActionStatement?: (ctx: ActionStatementContext) => Result;
+	/**
+	 * Visit a parse tree produced by `BlockLangParser.grabAction`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitGrabAction?: (ctx: GrabActionContext) => Result;
+	/**
+	 * Visit a parse tree produced by `BlockLangParser.releaseAction`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitReleaseAction?: (ctx: ReleaseActionContext) => Result;
 }
 

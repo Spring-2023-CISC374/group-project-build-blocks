@@ -8,6 +8,10 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.min.js"
 		integrity="sha512-4T3GMbqlA/8FAPZRSo/JbV6RNL4s/XkV86vNHzuHPHPeqKJWbV3Sp5KicgK3NwB+bd4KOm1Q6c7O3RNV2o6RPg=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/ace/1.18.0/ext-language_tools.min.js'
+		integrity='sha512-Yfq8006FlU9jvJkQga/htWTCwByd5es+PgocTYX2ztHGyZ9VinDxo7FC+KG7WTbVPnSHz1xcdh+bfzMJ7iq84g=='
+		crossorigin='anonymous'></script>
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/1.1.0/modern-normalize.min.css"
 		integrity="sha512-wpPYUAdjBVSE4KJnH1VR1HeZfpl1ub8YT/NKx4PuQ5NmX2tKuGu6U/JRp5y+Y8XG2tV+wKQpNHVUX03MfMFn9Q=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -73,19 +77,121 @@
 	</div>
 	<div id="output"></div>
 	<div id="errors"></div>
+	<!-- https://ace.c9.io/#nav=embedding -->
 	<script type="module">
-		// https://ace.c9.io/#nav=embedding
 		import { CharStream, CommonTokenStream } from 'antlr4';
-		import BlockLangLexer from '../src/ANTLR4/generated/BlockLangLexer';
-		import BlockLangParser from '../src/ANTLR4/generated/BlockLangParser';
-		import BlockVisitor from '../src/scripts/utils/BlockVisitor';
+		import BlockLangLexer from './src/ANTLR4/generated/BlockLangLexer';
+		import BlockLangParser from './src/ANTLR4/generated/BlockLangParser';
+		import BlockVisitor from './src/scripts/utils/BlockVisitor';
 
 
 		const editor = ace.edit("editor");
 		const parse = document.getElementById("parse");
 
+		ace.define("ace/mode/blocklang_highlight_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"], function (require, exports, module) {
+			var oop = require("../lib/oop");
+			var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+			var BlockLangHighlightRules = function () {
+
+				var loopStatement = "loop\\s*";
+				var actionStatement = "\\b(grab|close|release|open)\\b";
+				var moveStatement = "\\b(up|down|left|right)\\b";
+
+				this.$rules = {
+					"start": [
+						{
+							token: "keyword",
+							regex: loopStatement,
+							next: "loop"
+						},
+						{
+							token: "entity.name.function",
+							regex: actionStatement
+						},
+						{
+							token: "support.function",
+							regex: moveStatement
+						},
+						{
+							token: "keyword",
+							regex: "endloop\\s*"
+						}
+					],
+					"loop": [
+						{
+							token: "constant.numeric",
+							regex: "\\d+",
+							next:"start"
+						}
+					]
+				};
+			};
+
+			oop.inherits(BlockLangHighlightRules, TextHighlightRules);
+
+			exports.BlockLangHighlightRules = BlockLangHighlightRules;
+		});
+
+		ace.define("ace/mode/blocklang", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/mode/blocklang_highlight_rules"], function(require, exports, module) {
+			var oop = require("../lib/oop");
+			var TextMode = require("./text").Mode;
+			var BlockLangHighlightRules = require("./blocklang_highlight_rules").BlockLangHighlightRules;
+
+			var Mode = function() {
+				this.HighlightRules = BlockLangHighlightRules;
+				this.$behaviour = this.$defaultBehaviour;
+			};
+			oop.inherits(Mode, TextMode);
+
+			(function() {
+				this.lineCommentStart = "//";
+
+				this.getNextLineIndent = function(state, line, tab) {
+					var indent = this.$getIndent(line);
+					var match = line.match(/^\s*(?:loop|endloop)/);
+					console.log(match)
+					if (match && match[0] === "endloop") {
+						indent = indent.substring(tab.length);
+					}
+					if (match && match[0] === "loop") {
+						indent += tab;
+					}
+					return indent;
+				};
+
+				this.$id = "ace/mode/blocklang";
+			}).call(Mode.prototype);
+
+			exports.Mode = Mode;
+		});
+		ace.config.setModuleUrl("ace/mode/blocklang_highlight_rules", "/path/to/blocklang_highlight_rules.js");
+		ace.config.setModuleUrl("ace/mode/blocklang", "/path/to/blocklang.js");
+		editor.session.setMode("ace/mode/blocklang");
+		editor.setOptions({
+			enableBasicAutocompletion: [{
+				getCompletions: (editor, session, pos, prefix, callback) => {
+					callback(null, [
+						{ value: 'up', meta: 'move crane up' },
+						{ value: 'down', meta: 'move crane down' },
+						{ value: 'left', meta: 'move crane left' },
+						{ value: 'right', meta: 'move crane right' },
+						{ value: 'release', meta: 'release crate' },
+						{ value: 'grab', meta: 'grab crate' },
+						{ value: 'open', meta: 'release crate' },
+						{ value: 'close', meta: 'grab crate' },
+						{ value: 'loop ', meta: 'loop N' },
+						{ value: 'endloop', meta: 'loop N' }
+					]);
+				},
+			}],
+
+			enableSnippets: true,
+			enableLiveAutocompletion: true
+		});
 		editor.setTheme("ace/theme/monokai");
 		console.log(editor);
+		editor.setShowInvisibles(true);
 		editor.resize();
 		editor.setShowPrintMargin(false);
 		editor.setFontSize(18);
@@ -145,7 +251,7 @@
 			// const visitor = new BlockVisitor(document.getElementById("output"));
 			// console.log(visitor.visit(tree));
 			document.getElementById("output").innerHTML = formatParseTree(tree.toStringTree(null, parser));
-			scene.testCode(input);
+			scene.execute(input);
 		}
 		document.getElementById("parse").addEventListener("click", submitCode);
 	</script>

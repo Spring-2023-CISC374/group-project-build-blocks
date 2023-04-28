@@ -9,6 +9,8 @@ import { StatementContext } from "./BlockLangParser";
 import { LoopStatementContext } from "./BlockLangParser";
 import { MoveStatementContext } from "./BlockLangParser";
 import { ActionStatementContext } from "./BlockLangParser";
+import { GrabActionContext } from "./BlockLangParser";
+import { ReleaseActionContext } from "./BlockLangParser";
 
 
 /**
@@ -66,5 +68,25 @@ export default class BlockLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitActionStatement?: (ctx: ActionStatementContext) => void;
+	/**
+	 * Enter a parse tree produced by `BlockLangParser.grabAction`.
+	 * @param ctx the parse tree
+	 */
+	enterGrabAction?: (ctx: GrabActionContext) => void;
+	/**
+	 * Exit a parse tree produced by `BlockLangParser.grabAction`.
+	 * @param ctx the parse tree
+	 */
+	exitGrabAction?: (ctx: GrabActionContext) => void;
+	/**
+	 * Enter a parse tree produced by `BlockLangParser.releaseAction`.
+	 * @param ctx the parse tree
+	 */
+	enterReleaseAction?: (ctx: ReleaseActionContext) => void;
+	/**
+	 * Exit a parse tree produced by `BlockLangParser.releaseAction`.
+	 * @param ctx the parse tree
+	 */
+	exitReleaseAction?: (ctx: ReleaseActionContext) => void;
 }
 

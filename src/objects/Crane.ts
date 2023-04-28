@@ -3,7 +3,7 @@ import Phaser from "phaser";
 export default class Crane extends Phaser.Physics.Arcade.Sprite {
     
     /* CRANE CONSTANTS */
-    public static readonly MOVEMENT_TIME = 250; //time in milliseconds 
+    public static readonly MOVEMENT_TIME = 200; //time in milliseconds 
     public static readonly MOVEMENT_VELOCITY = 32 * 1000 / Crane.MOVEMENT_TIME; //speed to move at in units/second 32 units is one "block"
 
     public static readonly PICKUP_BOX_OFFSET = 24;
@@ -59,6 +59,8 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
     public moveDown() {
         if(!this.isMoving) {
             this.isMoving = true;
+            // check if the crane will collide with crate if so, don't move
+            // if(this.)
             this.setVelocityY(Crane.MOVEMENT_VELOCITY);
             if(this.carriedObject !== undefined) {
                 this.carriedObject.setVelocityY(Crane.MOVEMENT_VELOCITY)
@@ -100,7 +102,7 @@ export default class Crane extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    private clearMovement() {
+    public clearMovement() {
         //stop everything from moving
         this.setVelocityY(0); 
         this.setVelocityX(0);

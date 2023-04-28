@@ -1,1 +1,1 @@
-export type Color = "none" | "red" | "blue" | "green";
+export type Color = "brown" | "red" | "blue" | "green";

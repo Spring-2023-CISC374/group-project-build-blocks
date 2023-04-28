@@ -22,8 +22,18 @@ moveStatement
     ;
 
 actionStatement
-    : 'open'
+    : grabAction
+    | releaseAction
+    ;
+
+grabAction
+    : 'grab'
     | 'close'
+    ;
+
+releaseAction
+    : 'release'
+    | 'open'
     ;
 
 NUMBER
