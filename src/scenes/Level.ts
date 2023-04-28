@@ -29,13 +29,15 @@ export default class Level extends Phaser.Scene {
     private right_blocks = 0;
     private up_blocks = 0;
     private down_blocks = 0;
-    private loop_blocks = 0;
-    private endloop_blocks = 0;
+    //private loop_blocks = 0;
+    //private endloop_blocks = 0;
 
     /* SCENE VARIABLES */
     private crates?: Phaser.Physics.Arcade.Group
     private endCrates?: Phaser.Physics.Arcade.Group
     private crane: Crane;
+    private start_instruction?: Instruction;
+
     // private toggleVisibleButton?: Phaser.GameObjects.Text;
     private score = 0;
     public Instructions?: Instruction[];
@@ -62,8 +64,8 @@ export default class Level extends Phaser.Scene {
         this.left_blocks = data.gridData.left_blocks;
         this.right_blocks = data.gridData.right_blocks;
         this.down_blocks = data.gridData.down_blocks;
-        this.loop_blocks = data.gridData.loop_blocks;
-        this.endloop_blocks = data.gridData.endloop_blocks;
+        //this.loop_blocks = data.gridData.loop_blocks;
+        //this.endloop_blocks = data.gridData.endloop_blocks;
         this.createLevel()
 	}
 
@@ -90,7 +92,25 @@ export default class Level extends Phaser.Scene {
         // makes drag and drop instructions
         this.generate_instructions();
 
-        //TEMP DRAG AND DROP ELEMENT
+        // create button to for executing instructions
+        const executeButton = this.add.rectangle(this.sys.game.canvas.width-80, this.sys.game.canvas.height-130, 140, 30, 0x204060, 1);
+
+        executeButton.setInteractive();
+        executeButton.on('pointerover', () => {
+            executeButton.setFillStyle(0x204060, 0.6);
+        });
+        executeButton.on('pointerout', () => {
+            executeButton.setFillStyle(0x204060, 1);
+        });
+        const executeText = this.add.text(this.sys.game.canvas.width-80, this.sys.game.canvas.height-130, `execute!`, {
+            fontSize: '18px',
+            color: '#fff',
+        });
+        executeText.setOrigin(0.5);
+        executeButton.on('pointerdown', () => {
+            console.log(this.InstructionChainToString());
+            this.execute(this.InstructionChainToString())
+        });
         
         // create button to for going back to level selection
         const levelSelectButton = this.add.rectangle(this.sys.game.canvas.width-80, this.sys.game.canvas.height-30, 140, 30, 0x204060, 1);
@@ -188,6 +208,7 @@ export default class Level extends Phaser.Scene {
             const fred = new Instruction(this, currX, currY, "start");
             this.add.existing(fred);
             this.Instructions?.push(fred);
+            this.start_instruction = fred;
             currY += 50;
         }
 
@@ -227,6 +248,21 @@ export default class Level extends Phaser.Scene {
         
         currX += 100;
         currY = 50;
+    }
+
+    InstructionChainToString(){
+        let currInstruction = this.start_instruction;
+        if(this.start_instruction){
+            let instructionString = "";
+            while(currInstruction?.nextInstruction !== undefined){
+                currInstruction = currInstruction.nextInstruction;
+                instructionString += currInstruction.instructionType;
+                instructionString += "\n"
+            }
+
+            return instructionString;
+        }
+        return "";
     }
 
     execute(s: string) {
