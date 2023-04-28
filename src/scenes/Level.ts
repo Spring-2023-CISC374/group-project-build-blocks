@@ -1,6 +1,6 @@
+import { GridData } from './../interfaces/GridData';
 import Phaser from 'phaser'
 import Crane from '../objects/Crane';
-import { GridData } from '../interfaces/GridData';
 import { CharStream, CommonTokenStream } from 'antlr4';
 import BlockLangLexer from '../ANTLR4/generated/BlockLangLexer';
 import BlockLangParser from '../ANTLR4/generated/BlockLangParser';
@@ -11,8 +11,6 @@ import Grid from '../objects/Grid';
 export default class Level extends Phaser.Scene {
     
     /* SCENE CONSTANTS */
-    private MAX_SCORE: number;
-
     private grid: Grid;
     private secondaryGrid: Grid;
 
@@ -49,11 +47,9 @@ export default class Level extends Phaser.Scene {
     get getCrane(){
         return this.crane;
     }
-    init(data:{levelNumber: number, gridData: GridData, maxScore: number}) {
-        console.log(data)
+    init(data:{levelNumber: number, gridData: GridData}) {
         this.grid = new Grid(data.gridData, true, this);
         this.secondaryGrid = new Grid(data.gridData, false, this);
-        this.MAX_SCORE = data.maxScore;
         this.createLevel()
 	}
 
@@ -164,8 +160,10 @@ export default class Level extends Phaser.Scene {
 
     private checkWin() {
         this.getScore();
-        const didWin = this.score === this.MAX_SCORE;
+        const didWin = this.score === this.grid.maxScore;
+        console.log(this.score)
         if (didWin) {
+            console.log("you win!")
             this.add.text(400,300,"YOU WIN!");
         }
         return didWin;

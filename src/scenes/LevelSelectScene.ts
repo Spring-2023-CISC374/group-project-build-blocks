@@ -6,7 +6,7 @@ export default class LevelSelectScene extends Phaser.Scene {
 	// private LevelBtns?: Array<Phaser.GameObjects>;
 
 	/* SCENE CONSTANTS */
-	private LEVELS: Array<GridData> = [{ width: 5, height: 5, 
+	private LEVELS: Array<GridData> = [{ width: 5, height: 5,
 		gridObjects: [
 			["none", "none", "none", "none", "crane"],
 			["none", "none", "none", "none", "none"],
@@ -21,7 +21,7 @@ export default class LevelSelectScene extends Phaser.Scene {
 			["none", "none", "crate-brown", "none", "none"],
 			["none", "none", "crate-brown", "none", "none"]
 		]	
-	}, { width: 5, height: 5, 
+	}, { width: 5, height: 5,
 		gridObjects: [
 			["none", "none", "none", "none", "crane"],
 			["none", "none", "none", "none", "none"],
@@ -72,7 +72,7 @@ export default class LevelSelectScene extends Phaser.Scene {
 			levelButton.on('pointerdown', () => {
 				console.log(`level ${i} clicked`);
 				
-				this.scene.start(`level`,{levelNumber: i, gridData: this.LEVELS[i], maxScore: 0, 
+				this.scene.start(`level`,{levelNumber: i, gridData: this.LEVELS[i], 
 					// blockCount: {"left": 999, "right": 999, "up": 999, "down": 999,
 					//  "close": 999, "open": 999, "loops": 999, "numbers": 999}
 				});

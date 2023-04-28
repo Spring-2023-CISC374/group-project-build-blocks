@@ -22,6 +22,8 @@ export default class Grid {
     public gridVars: GridVars
     private isVisible: boolean;
 
+    public maxScore?: number;
+
     /**
      * A grid object
      * @param GridData - GridData
@@ -49,12 +51,13 @@ export default class Grid {
             );
         }
         this.isVisible = true;
+        if (isPrimaryGrid) this.getMaxScore();
     }
     /* HELPER FUNCTIONS */
 
     getGoalText(): string {
 		let result = "GOAL\n";
-  		const legend = "\nE = empty\nC = crane\nT = tan\nR = Red\nG = green\nB = blue";
+        const legend = "\nE = empty\nC = crane\nT = tan\nR = Red\nG = green\nB = blue";
   
 		const symbolMap = {
 			"none": "E",
@@ -63,19 +66,18 @@ export default class Grid {
 			"crate-green": "G",
 			"crate-blue": "B",
 			"crane": "C"
-		  };
-
-		  for (let i = 0; i < this.gridData.gridObjectives.length; i++) {
-			for (let j = 0; j < this.gridData.gridObjectives[i].length; j++) {
-			  const symbol = symbolMap[this.gridData.gridObjectives[i][j]] || "?";
-			  result += symbol + " ";
-			}
-			result += "\n";
-		  }
-		  
-		  result += legend;
-
-		  return result;
+        };
+        
+        for (let i = 0; i < this.gridData.gridObjectives.length; i++) {
+            for (let j = 0; j < this.gridData.gridObjectives[i].length; j++) {
+                const symbol = symbolMap[this.gridData.gridObjectives[i][j]] || "?";
+                result += symbol + " ";
+            }
+            result += "\n";
+        }
+        
+        result += legend;
+        return result;
 	}
 
     public makeGrid() {
@@ -118,6 +120,24 @@ export default class Grid {
             });
             this.toggleVisibleButton.setOrigin(0.8);
         }
+    }
+
+    private getMaxScore() {
+        let numBlocks = 0;
+        let numGoalBlocks = 0;
+        for (let row = 0; row < this.gridData.height; row++) {
+            for (let col = 0; col < this.gridData.width; col++) {
+                const gridobject = this.gridData.gridObjects[row][col];
+                const gridobjective = this.gridData.gridObjectives[row][col];
+                if (!( gridobject === "none" || gridobject === "crane")) {
+                    numBlocks++;
+                }
+                if (!( gridobjective === "none" || gridobjective === "crane")) {
+                    numGoalBlocks++;
+                } 
+            }
+        }
+        this.maxScore = Math.min(numBlocks, numGoalBlocks);
     }
 
     private placeBlocks(isBlocks: boolean) {
