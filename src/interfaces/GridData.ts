@@ -8,4 +8,12 @@ export interface GridData {
     gridObjects: LevelObject[][];
 
     gridObjectives: LevelObject[][];
+
+    start_blocks: number;
+    loop_blocks: number;
+    endloop_blocks: number;
+    left_blocks: number;
+    right_blocks: number;
+    down_blocks: number;
+    up_blocks: number;
 }

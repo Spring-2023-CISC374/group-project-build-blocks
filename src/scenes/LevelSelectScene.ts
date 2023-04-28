@@ -20,7 +20,16 @@ export default class LevelSelectScene extends Phaser.Scene {
 			["none", "none", "crate-brown", "none", "none"],
 			["none", "none", "crate-brown", "none", "none"],
 			["none", "none", "crate-brown", "none", "none"]
-		]	
+		],
+
+		start_blocks: 1,
+		loop_blocks: 0,
+		endloop_blocks: 0,
+		left_blocks: 6,
+		right_blocks: 6,
+		down_blocks: 6,
+		up_blocks: 6,
+
 	}, { width: 5, height: 5,
 		gridObjects: [
 			["none", "none", "none", "none", "crane"],
@@ -35,7 +44,14 @@ export default class LevelSelectScene extends Phaser.Scene {
 			["crate-blue", "crate-red", "crate-green", "none", "none"],
 			["crate-blue", "crate-red", "crate-green", "none", "none"],
 			["crate-blue", "crate-red", "crate-green", "none", "none"]
-		]
+		],
+		start_blocks: 1,
+		loop_blocks: 0,
+		endloop_blocks: 0,
+		left_blocks: 6,
+		right_blocks: 6,
+		down_blocks: 6,
+		up_blocks: 6,
 	}]
 
 	constructor() {

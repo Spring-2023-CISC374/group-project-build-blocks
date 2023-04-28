@@ -24,6 +24,13 @@ export default class Level extends Phaser.Scene {
     public static readonly S_GRID_START_LEFT = 300;
     public static readonly S_GRID_SQUARE_SIZE = 32;
 
+    private start_blocks = 0;
+    private left_blocks = 0;
+    private right_blocks = 0;
+    private up_blocks = 0;
+    private down_blocks = 0;
+    private loop_blocks = 0;
+    private endloop_blocks = 0;
 
     /* SCENE VARIABLES */
     private crates?: Phaser.Physics.Arcade.Group
@@ -39,8 +46,6 @@ export default class Level extends Phaser.Scene {
 
     /* ESSENTIAL FUNCTIONS */
 
-
-
     constructor(){
 		super(`level`);
     }
@@ -51,6 +56,14 @@ export default class Level extends Phaser.Scene {
     init(data:{levelNumber: number, gridData: GridData}) {
         this.grid = new Grid(data.gridData, true, this);
         this.secondaryGrid = new Grid(data.gridData, false, this);
+
+        this.start_blocks = data.gridData.start_blocks;
+        this.up_blocks = data.gridData.up_blocks;
+        this.left_blocks = data.gridData.left_blocks;
+        this.right_blocks = data.gridData.right_blocks;
+        this.down_blocks = data.gridData.down_blocks;
+        this.loop_blocks = data.gridData.loop_blocks;
+        this.endloop_blocks = data.gridData.endloop_blocks;
         this.createLevel()
 	}
 
@@ -74,14 +87,10 @@ export default class Level extends Phaser.Scene {
         const contentWnd = iframe.contentWindow as Window  & {scene: Level};
         contentWnd.scene = this;
 
+        // makes drag and drop instructions
+        this.generate_instructions();
 
         //TEMP DRAG AND DROP ELEMENT
-        const fred = new Instruction(this, 400, 600, "start");
-        this.add.existing(fred);
-        this.Instructions?.push(fred);
-        const burt = new Instruction(this, 400, 200, "start");
-        this.add.existing(burt);
-        this.Instructions?.push(burt);
         
         // create button to for going back to level selection
         const levelSelectButton = this.add.rectangle(this.sys.game.canvas.width-80, this.sys.game.canvas.height-30, 140, 30, 0x204060, 1);
@@ -169,6 +178,55 @@ export default class Level extends Phaser.Scene {
             this.add.text(400,300,"YOU WIN!");
         }
         return didWin;
+    }
+
+    generate_instructions(){
+        let currX = 400;
+        let currY = 50;
+
+        for(let i = 0; i < this.start_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "start");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+
+        currX += 100;
+        currY = 50;
+        for(let i = 0; i < this.right_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "right");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+
+        currX += 100;
+        currY = 50;
+        for(let i = 0; i < this.left_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "left");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+
+        for(let i = 0; i < this.down_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "down");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+        
+        currX += 100;
+        currY = 50;
+        for(let i = 0; i < this.up_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "up");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+        
+        currX += 100;
+        currY = 50;
     }
 
     execute(s: string) {
