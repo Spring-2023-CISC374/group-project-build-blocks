@@ -69,17 +69,28 @@ export default class Instruction extends Phaser.GameObjects.Image {
         }
     }
 
+    snapIntoPlace(){
+        if(this.previousInstruction){
+            this.x = this.previousInstruction.x;
+            this.y = this.previousInstruction.y + 31;
+        }
+        if(this.nextInstruction){
+            this.nextInstruction?.snapIntoPlace();
+        }
+    }
+
     handleDrop(mouse: Phaser.Input.Pointer, dragTarget: Phaser.GameObjects.GameObject, dropTarget: Phaser.GameObjects.GameObject) {
         if(dragTarget === this) {
             if(dropTarget instanceof Instruction && dropTarget !== this){
 
                 //inserts this instruction into the linked list
-                this.previousInstruction = dropTarget;
-                this.previousInstruction.nextInstruction = this;
+                if(this.previousInstruction === undefined && dropTarget.nextInstruction === undefined) {
+                    this.previousInstruction = dropTarget;
+                    this.previousInstruction.nextInstruction = this;
+                }
 
                 //snaps added instruction into place
-                this.x = this.previousInstruction.x;
-                this.y = this.previousInstruction.y + 31;
+                this.snapIntoPlace();
             }
         }
 
