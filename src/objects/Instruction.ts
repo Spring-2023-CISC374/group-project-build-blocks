@@ -8,12 +8,14 @@ export default class Instruction extends Phaser.GameObjects.Image {
     public instructionType: InstructionType;
     
     //private loopNum = 0;
-
+    //| "right" | "up" | "down" | "grab" | "release" | "loop-start" | "loop-end" | number:
     public nextInstruction?: Instruction;
     public previousInstruction?: Instruction;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, instructionType: InstructionType) {
-        super(scene, x, y, texture);
+    constructor(scene: Phaser.Scene, x: number, y: number, instructionType: InstructionType) {
+        
+        super(scene, x, y, "instruction-" + instructionType);
+
         this.instructionType = instructionType;      
 
         //enable drag
@@ -46,6 +48,7 @@ export default class Instruction extends Phaser.GameObjects.Image {
             this.scene.children.bringToTop(this);
         }
 
+        // removes parent relationship from the linked list segment when dragged
         if(this === gameObject){
             if(this.previousInstruction){
                 this.previousInstruction.nextInstruction = undefined;

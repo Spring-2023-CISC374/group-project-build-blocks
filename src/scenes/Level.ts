@@ -76,14 +76,12 @@ export default class Level extends Phaser.Scene {
 
 
         //TEMP DRAG AND DROP ELEMENT
-        const fred = new Instruction(this, 400, 600, "instruction-start", "start");
+        const fred = new Instruction(this, 400, 600, "start");
         this.add.existing(fred);
         this.Instructions?.push(fred);
-        const burt = new Instruction(this, 400, 200, "instruction-start", "start");
+        const burt = new Instruction(this, 400, 200, "start");
         this.add.existing(burt);
         this.Instructions?.push(burt);
-        //fred.nextInstruction = burt;
-        //this.input.topOnly = false;
         
         // create button to for going back to level selection
         const levelSelectButton = this.add.rectangle(this.sys.game.canvas.width-80, this.sys.game.canvas.height-30, 140, 30, 0x204060, 1);
@@ -121,13 +119,6 @@ export default class Level extends Phaser.Scene {
         restartButton.on('pointerdown', () => {
             this.scene.restart();
         });
-
-
-        
-
-        //TEMP TEXT
-        // this.add.text(550, 0, this.blockCount, {color: "black"});
-        // this.add.text(350, 0, this.goal, {color: "black"});
     }
 
     update(){
