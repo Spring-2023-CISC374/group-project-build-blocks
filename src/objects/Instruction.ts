@@ -41,7 +41,7 @@ export default class Instruction extends Phaser.GameObjects.Image {
     
     
     // when this is called from other scenes it will pass these values    
-    handleDrag(mouse: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) {
+    handleDrag(_mouse: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) {
 
         // brings the object being dragged to the bottom because dropping only works when its behind everything for some reason
         if(this !== gameObject) {
@@ -79,7 +79,7 @@ export default class Instruction extends Phaser.GameObjects.Image {
         }
     }
 
-    handleDrop(mouse: Phaser.Input.Pointer, dragTarget: Phaser.GameObjects.GameObject, dropTarget: Phaser.GameObjects.GameObject) {
+    handleDrop(_mouse: Phaser.Input.Pointer, dragTarget: Phaser.GameObjects.GameObject, dropTarget: Phaser.GameObjects.GameObject) {
         if(dragTarget === this) {
             if(dropTarget instanceof Instruction && dropTarget !== this){
 
