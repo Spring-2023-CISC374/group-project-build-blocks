@@ -240,7 +240,7 @@ export default class Level extends Phaser.Scene {
         currX += 100;
         currY = 50;
         for(let i = 0; i < this.up_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "up");
+            const fred = new Instruction(this, currX, currY, "release");
             this.add.existing(fred);
             this.Instructions?.push(fred);
             currY += 50;
@@ -248,6 +248,20 @@ export default class Level extends Phaser.Scene {
         
         currX += 100;
         currY = 50;
+
+        for(let i = 0; i < this.up_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "grab");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+        
+        for(let i = 0; i < this.up_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "up");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
     }
 
     InstructionChainToString(){
