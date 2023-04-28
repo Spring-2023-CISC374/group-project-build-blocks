@@ -19,6 +19,8 @@ export default class Instruction extends Phaser.GameObjects.Image {
         //enable drag
         this.setInteractive();
         scene.input.setDraggable(this);
+        this.input.dropZone = true;
+        //scene.input.setHitAreaFromTexture(this)
 
         //adds tint effect when hovered over
         this.on('pointerover', () => {
@@ -32,26 +34,32 @@ export default class Instruction extends Phaser.GameObjects.Image {
 
         // input.on  drag event  Pointer triggering event, gameObject, x & y stolen from wassil's phaser-scenes repo
         scene.input.on('drag', this.handleDrag, this);
-        //this.input.enabled = true;
-        //this.input.draggable = true;
-
+        scene.input.on('drop', this.handleDrop, this);
     }
     
     
     
     // when this is called from other scenes it will pass these values    
-    handleDrag(mouse: Phaser.Input.Pointer, gameObject: Instruction, dragX: number, dragY: number) {
+    handleDrag(mouse: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) {
         if(this === gameObject){
-            console.log("handleDrag " + this.x + " " + this.y);
+            //console.log("handleDrag " + this.x + " " + this.y);
             this.x = dragX;
             this.y = dragY;
         }
 
         //if there is a child update it (NEEDS TO BE OFFSET STILL)
         if(this.nextInstruction !== undefined) {
-            console.log("moving childs");
+            //console.log("moving childs");
             this.nextInstruction.handleDrag(mouse, this.nextInstruction, dragX, dragY + 32);
         }
     }    
-   
+    
+    handleDrop(mouse: Phaser.Input.Pointer, dragTarget: Phaser.GameObjects.GameObject, dropTarget: Phaser.GameObjects.GameObject) {
+        if(dragTarget === this) {
+            if(dropTarget instanceof Instruction){
+                console.log("attaching!");
+            }
+        }
+    }
+
 }
