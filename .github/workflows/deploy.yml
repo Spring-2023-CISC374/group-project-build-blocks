@@ -22,6 +22,7 @@ jobs:
     - name: Build and deploy
       run: |
         npm run build
-        npm run deploy
+        npm exec gh-pages -d dist -b gh-pages -u "github-actions-bot <support+actions@github.com>"
+        # npm run deploy
       env:
-        GH_PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
