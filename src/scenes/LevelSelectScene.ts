@@ -20,7 +20,16 @@ export default class LevelSelectScene extends Phaser.Scene {
 			["none", "none", "crate-brown", "none", "none"],
 			["none", "none", "crate-brown", "none", "none"],
 			["none", "none", "crate-brown", "none", "none"]
-		]	
+		],
+
+		start_blocks: 1,
+		loop_blocks: 0,
+		endloop_blocks: 0,
+		left_blocks: 6,
+		right_blocks: 6,
+		down_blocks: 6,
+		up_blocks: 6,
+
 	}, { width: 5, height: 5,
 		gridObjects: [
 			["none", "none", "none", "none", "crane"],
@@ -35,7 +44,14 @@ export default class LevelSelectScene extends Phaser.Scene {
 			["crate-blue", "crate-red", "crate-green", "none", "none"],
 			["crate-blue", "crate-red", "crate-green", "none", "none"],
 			["crate-blue", "crate-red", "crate-green", "none", "none"]
-		]
+		],
+		start_blocks: 1,
+		loop_blocks: 0,
+		endloop_blocks: 0,
+		left_blocks: 6,
+		right_blocks: 6,
+		down_blocks: 6,
+		up_blocks: 6,
 	}]
 
 	constructor() {
@@ -49,6 +65,16 @@ export default class LevelSelectScene extends Phaser.Scene {
         this.load.image('craneClosed', 'assets/CraneBasicGreen.png');
         this.load.image('cranePickupBox', 'assets/CranePickupBox.png');
         this.load.spritesheet('visibilityButton', 'assets/VisibilityButtons.png', {frameWidth: 48, frameHeight: 32});
+		
+		this.load.image('instruction-start', 'assets/StartInstruction.png');
+		this.load.image('instruction-loop', 'assets/LoopInstruction.png');
+		this.load.image('instruction-endloop', 'assets/EndloopInstruction.png');
+		this.load.image('instruction-up', 'assets/UpInstruction.png');
+		this.load.image('instruction-down', 'assets/DownInstruction.png');
+		this.load.image('instruction-left', 'assets/LeftInstruction.png');
+		this.load.image('instruction-right', 'assets/RightInstruction.png');
+		this.load.image('instruction-grab', 'assets/CloseInstruction.png');
+		this.load.image('instruction-release', 'assets/OpenInstruction.png');
 	}
 
 	create() {
