@@ -23,12 +23,15 @@ export default class LevelSelectScene extends Phaser.Scene {
 		],
 
 		start_blocks: 1,
-		loop_blocks: 0,
-		endloop_blocks: 0,
+		loop_blocks: 2,
+		endloop_blocks: 2,
 		left_blocks: 6,
 		right_blocks: 6,
 		down_blocks: 6,
 		up_blocks: 6,
+		grab_blocks: 3,
+		release_blocks: 3,
+		number_blocks: [1, 2, 3, 4],
 
 	}, { width: 5, height: 5,
 		gridObjects: [
@@ -46,12 +49,15 @@ export default class LevelSelectScene extends Phaser.Scene {
 			["crate-blue", "crate-red", "crate-green", "none", "none"]
 		],
 		start_blocks: 1,
-		loop_blocks: 0,
-		endloop_blocks: 0,
+		loop_blocks: 2,
+		endloop_blocks: 2,
 		left_blocks: 6,
 		right_blocks: 6,
 		down_blocks: 6,
 		up_blocks: 6,
+		grab_blocks: 3,
+		release_blocks: 3,
+		number_blocks: [1, 2, 3, 4],
 	}]
 
 	constructor() {
@@ -66,6 +72,8 @@ export default class LevelSelectScene extends Phaser.Scene {
         this.load.image('cranePickupBox', 'assets/CranePickupBox.png');
         this.load.spritesheet('visibilityButton', 'assets/VisibilityButtons.png', {frameWidth: 48, frameHeight: 32});
 		
+
+		this.load.image('instruction', 'assets/Instruction.png');
 		this.load.image('instruction-start', 'assets/StartInstruction.png');
 		this.load.image('instruction-loop', 'assets/LoopInstruction.png');
 		this.load.image('instruction-endloop', 'assets/EndloopInstruction.png');

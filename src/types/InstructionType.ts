@@ -1,1 +1,1 @@
-export type InstructionType = "start" | "left" | "right" | "up" | "down" | "grab" | "release" | "loop" | "endloop" | number;
+export type InstructionType = "start" | "left" | "right" | "up" | "down" | "grab" | "release" | "loop" | "endloop" | "number";

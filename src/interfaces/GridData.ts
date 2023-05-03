@@ -16,4 +16,7 @@ export interface GridData {
     right_blocks: number;
     down_blocks: number;
     up_blocks: number;
+    grab_blocks: number;
+    release_blocks: number;
+    number_blocks: number[];
 }

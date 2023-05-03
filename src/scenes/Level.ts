@@ -29,8 +29,10 @@ export default class Level extends Phaser.Scene {
     private right_blocks = 0;
     private up_blocks = 0;
     private down_blocks = 0;
-    //private loop_blocks = 0;
-    //private endloop_blocks = 0;
+    private grab_blocks = 0;
+    private release_blocks = 0;
+    private loop_blocks = 0;
+    private endloop_blocks = 0;
 
     /* SCENE VARIABLES */
     private crates?: Phaser.Physics.Arcade.Group
@@ -64,8 +66,10 @@ export default class Level extends Phaser.Scene {
         this.left_blocks = data.gridData.left_blocks;
         this.right_blocks = data.gridData.right_blocks;
         this.down_blocks = data.gridData.down_blocks;
-        //this.loop_blocks = data.gridData.loop_blocks;
-        //this.endloop_blocks = data.gridData.endloop_blocks;
+        this.grab_blocks = data.gridData.grab_blocks;
+        this.release_blocks = data.gridData.release_blocks;
+        this.loop_blocks = data.gridData.loop_blocks;
+        this.endloop_blocks = data.gridData.endloop_blocks;
         this.createLevel()
 	}
 
@@ -239,17 +243,31 @@ export default class Level extends Phaser.Scene {
         
         currX += 100;
         currY = 50;
-        for(let i = 0; i < this.up_blocks; i++) {
+        for(let i = 0; i < this.release_blocks; i++) {
             const fred = new Instruction(this, currX, currY, "release");
             this.add.existing(fred);
             this.Instructions?.push(fred);
             currY += 50;
         }
         
+        for(let i = 0; i < this.loop_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "loop");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+
+        for(let i = 0; i < this.endloop_blocks; i++) {
+            const fred = new Instruction(this, currX, currY, "endloop");
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+
         currX += 100;
         currY = 50;
 
-        for(let i = 0; i < this.up_blocks; i++) {
+        for(let i = 0; i < this.grab_blocks; i++) {
             const fred = new Instruction(this, currX, currY, "grab");
             this.add.existing(fred);
             this.Instructions?.push(fred);
@@ -271,6 +289,9 @@ export default class Level extends Phaser.Scene {
             while(currInstruction?.nextInstruction !== undefined){
                 currInstruction = currInstruction.nextInstruction;
                 instructionString += currInstruction.instructionType;
+                if(currInstruction.instructionType === "loop") {
+                    instructionString += " " + currInstruction.loopChild;
+                }
                 instructionString += "\n"
             }
 

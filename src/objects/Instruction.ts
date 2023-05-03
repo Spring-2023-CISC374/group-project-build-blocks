@@ -6,16 +6,20 @@ export default class Instruction extends Phaser.GameObjects.Image {
 
     /* CLASS VARIABLE */
     public instructionType: InstructionType;
-    
-    //private loopNum = 0;
-    //| "right" | "up" | "down" | "grab" | "release" | "loop-start" | "loop-end" | number:
+    public instructionText;
+
+    public loopChild?: Instruction;
+    public loopNumber?: number;
+
     public nextInstruction?: Instruction;
     public previousInstruction?: Instruction;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, instructionType: InstructionType) {
+    constructor(scene: Phaser.Scene, x: number, y: number, instructionType: InstructionType, number?: number) {
         
-        super(scene, x, y, "instruction-" + instructionType);
+        super(scene, x, y, "instruction");
 
+        this.instructionText = scene.add.text(x - 88/2, y - 24/2, instructionType, {color: "black", fontSize: "20px", align: "left"});
+        this.instructionText.depth = 999;
         this.instructionType = instructionType;      
 
         //enable drag
@@ -57,11 +61,14 @@ export default class Instruction extends Phaser.GameObjects.Image {
 
             this.moveInstruction(dragX, dragY);
         }
+        this.instructionText.depth = 999;
     }    
     
     moveInstruction(dragX: number, dragY: number) {
         this.x = dragX;
         this.y = dragY;
+        this.instructionText.x = dragX - 88/2;
+        this.instructionText.y = dragY - 24/2;
         
         //if there is a child update it (NEEDS TO BE OFFSET STILL)
         if(this.nextInstruction !== undefined) {
