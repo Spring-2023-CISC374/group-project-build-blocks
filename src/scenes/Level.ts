@@ -33,6 +33,7 @@ export default class Level extends Phaser.Scene {
     private release_blocks = 0;
     private loop_blocks = 0;
     private endloop_blocks = 0;
+    private number_blocks = [0];
 
     /* SCENE VARIABLES */
     private crates?: Phaser.Physics.Arcade.Group
@@ -70,6 +71,7 @@ export default class Level extends Phaser.Scene {
         this.release_blocks = data.gridData.release_blocks;
         this.loop_blocks = data.gridData.loop_blocks;
         this.endloop_blocks = data.gridData.endloop_blocks;
+        this.number_blocks = data.gridData.number_blocks;
         this.createLevel()
 	}
 
@@ -216,6 +218,13 @@ export default class Level extends Phaser.Scene {
             currY += 50;
         }
 
+        for(let i = 0; i < this.number_blocks.length; i++) {
+            const fred = new Instruction(this, currX, currY, "number", this.number_blocks[i]);
+            this.add.existing(fred);
+            this.Instructions?.push(fred);
+            currY += 50;
+        }
+
         currX += 100;
         currY = 50;
         for(let i = 0; i < this.right_blocks; i++) {
@@ -290,11 +299,11 @@ export default class Level extends Phaser.Scene {
                 currInstruction = currInstruction.nextInstruction;
                 instructionString += currInstruction.instructionType;
                 if(currInstruction.instructionType === "loop") {
-                    instructionString += " " + currInstruction.loopChild;
+                    instructionString += " " + currInstruction.loopChild?.loopNumber;
                 }
                 instructionString += "\n"
             }
-
+            console.log(instructionString)
             return instructionString;
         }
         return "";

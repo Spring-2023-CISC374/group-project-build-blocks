@@ -16,10 +16,25 @@ export default class Instruction extends Phaser.GameObjects.Image {
 
     constructor(scene: Phaser.Scene, x: number, y: number, instructionType: InstructionType, number?: number) {
         
-        super(scene, x, y, "instruction");
+        //number instructions have an additional field and a different sprite
+        if(instructionType === "number" && number) {
+            super(scene, x, y, "instruction-number");
+            this.loopNumber = number;
+            this.instructionText = scene.add.text(x - 6, y - 9, number.toString(), {color: "black", fontSize: "18px", align: "left"});
+            this.instructionText.depth = 999;
+        }
+        //loop instructions have a different sprite
+        else if(instructionType === "loop") {
+            super(scene, x, y, "instruction-loop");
+            this.instructionText = scene.add.text(x - 44, y - 13, instructionType, {color: "black", fontSize: "18px", align: "left"});
+            this.instructionText.depth = 999;
+        }
+        else {
+            super(scene, x, y, "instruction");
+            this.instructionText = scene.add.text(x - 44, y - 13, instructionType, {color: "black", fontSize: "18px", align: "left"});
+            this.instructionText.depth = 999;
+        }
 
-        this.instructionText = scene.add.text(x - 88/2, y - 24/2, instructionType, {color: "black", fontSize: "20px", align: "left"});
-        this.instructionText.depth = 999;
         this.instructionType = instructionType;      
 
         //enable drag
@@ -50,12 +65,20 @@ export default class Instruction extends Phaser.GameObjects.Image {
         // brings the object being dragged to the bottom because dropping only works when its behind everything for some reason
         if(this !== gameObject) {
             this.scene.children.bringToTop(this);
+            if(this.loopChild){
+                this.scene.children.bringToTop(this.loopChild);
+            }
         }
 
         // removes parent relationship from the linked list segment when dragged
         if(this === gameObject){
             if(this.previousInstruction){
-                this.previousInstruction.nextInstruction = undefined;
+                if(this.instructionType === "number"){
+                    this.previousInstruction.loopChild = undefined;
+                }
+                else {
+                    this.previousInstruction.nextInstruction = undefined;
+                }
                 this.previousInstruction = undefined;
             }
 
@@ -67,40 +90,68 @@ export default class Instruction extends Phaser.GameObjects.Image {
     moveInstruction(dragX: number, dragY: number) {
         this.x = dragX;
         this.y = dragY;
-        this.instructionText.x = dragX - 88/2;
-        this.instructionText.y = dragY - 24/2;
+
+        //text offsets for this instruction
+        if(this.instructionType !== "number") {
+            this.instructionText.x = dragX - 44;
+            this.instructionText.y = dragY - 13;
+        }
+        else {
+            this.instructionText.x = dragX - 6;
+            this.instructionText.y = dragY - 18/2;
+        }
         
-        //if there is a child update it (NEEDS TO BE OFFSET STILL)
+        //if there is a child update it (so that it moves with parent
         if(this.nextInstruction !== undefined) {
             this.nextInstruction.moveInstruction(dragX, dragY + 31);
         }
+        if(this.loopChild !== undefined) {
+            this.loopChild.moveInstruction(dragX + 11, dragY - 4);
+        }
     }
 
+    //snaps objects into place relative to their parent
     snapIntoPlace(){
         if(this.previousInstruction){
-            this.x = this.previousInstruction.x;
-            this.y = this.previousInstruction.y + 31;
-        }
-        if(this.nextInstruction){
-            this.nextInstruction?.snapIntoPlace();
+            this.moveInstruction(this.previousInstruction.x, this.previousInstruction.y + 31)
         }
     }
 
     handleDrop(_mouse: Phaser.Input.Pointer, dragTarget: Phaser.GameObjects.GameObject, dropTarget: Phaser.GameObjects.GameObject) {
-        if(dragTarget === this) {
-            if(dropTarget instanceof Instruction && dropTarget !== this){
+        
+        //keep text on top
+        this.instructionText.depth = 999;
 
-                //inserts this instruction into the linked list
-                if(this.previousInstruction === undefined && dropTarget.nextInstruction === undefined) {
+        if(dragTarget === this) {
+            
+            //when im dropped on something that is an instruction, isn't me, and isn't a number
+            if(dropTarget instanceof Instruction && dropTarget !== this && dropTarget.instructionType !== "number"){
+
+                    //number specific dropping
+                    if(this.instructionType === "number") {
+
+                        //numbers can only be dropped into loops and loops should be empty
+                        if(dropTarget.instructionType === "loop" && dropTarget.loopChild === undefined) {
+                            
+                            //adds it the list
+                            this.previousInstruction = dropTarget;
+                            this.previousInstruction.loopChild = this;
+
+                            //moves the number that was dropped into place
+                            this.moveInstruction(this.previousInstruction.x + 11, this.previousInstruction.y - 4);
+
+                            //brings the number in the loop into place
+                            this.scene.children.bringToTop(this);
+                        }
+                    }
+                
+                //inserts this instruction into the linked list standard flow
+                else if(this.previousInstruction === undefined && dropTarget.nextInstruction === undefined) {
                     this.previousInstruction = dropTarget;
                     this.previousInstruction.nextInstruction = this;
+                    this.snapIntoPlace();
                 }
-
-                //snaps added instruction into place
-                this.snapIntoPlace();
             }
         }
-
     }
-
 }

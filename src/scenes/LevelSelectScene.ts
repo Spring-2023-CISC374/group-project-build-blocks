@@ -74,15 +74,8 @@ export default class LevelSelectScene extends Phaser.Scene {
 		
 
 		this.load.image('instruction', 'assets/Instruction.png');
-		this.load.image('instruction-start', 'assets/StartInstruction.png');
 		this.load.image('instruction-loop', 'assets/LoopInstruction.png');
-		this.load.image('instruction-endloop', 'assets/EndloopInstruction.png');
-		this.load.image('instruction-up', 'assets/UpInstruction.png');
-		this.load.image('instruction-down', 'assets/DownInstruction.png');
-		this.load.image('instruction-left', 'assets/LeftInstruction.png');
-		this.load.image('instruction-right', 'assets/RightInstruction.png');
-		this.load.image('instruction-grab', 'assets/CloseInstruction.png');
-		this.load.image('instruction-release', 'assets/OpenInstruction.png');
+		this.load.image('instruction-number', 'assets/Instruction-number.png')
 	}
 
 	create() {
