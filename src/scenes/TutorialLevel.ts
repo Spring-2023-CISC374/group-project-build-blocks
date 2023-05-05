@@ -1,5 +1,4 @@
 import { GridData } from './../interfaces/GridData';
-import Phaser from 'phaser'
 import Level from './Level';
 
 export default class TutorialLevel extends Level {
