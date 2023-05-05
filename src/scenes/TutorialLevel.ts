@@ -21,13 +21,15 @@ export default class TutorialLevel extends Level {
 		],
 
 		start_blocks: 1,
-		loop_blocks: 0,
-		endloop_blocks: 0,
+		loop_blocks: 2,
+		endloop_blocks: 2,
 		left_blocks: 6,
 		right_blocks: 6,
 		down_blocks: 6,
 		up_blocks: 6,
-
+		grab_blocks: 3,
+		release_blocks: 3,
+		number_blocks: [1, 2, 3, 4],
 	};
 
 	private tutorialTexts: string[] = [`Welcome to the tutorial level!
