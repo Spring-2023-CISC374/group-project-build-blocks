@@ -8,6 +8,7 @@ import BlockVisitor from '../scripts/utils/BlockVisitor';
 import Crate from '../objects/Crate';
 import Instruction from '../objects/Instruction';
 import Grid from '../objects/Grid';
+import { InstructionType } from '../types/InstructionType';
 
 export default class Level extends Phaser.Scene {
     
@@ -24,7 +25,6 @@ export default class Level extends Phaser.Scene {
     public static readonly S_GRID_START_LEFT = 300;
     public static readonly S_GRID_SQUARE_SIZE = 32;
 
-    private start_blocks = 0;
     private left_blocks = 0;
     private right_blocks = 0;
     private up_blocks = 0;
@@ -62,7 +62,6 @@ export default class Level extends Phaser.Scene {
         this.grid = new Grid(data.gridData, true, this);
         this.secondaryGrid = new Grid(data.gridData, false, this);
 
-        this.start_blocks = data.gridData.start_blocks;
         this.up_blocks = data.gridData.up_blocks;
         this.left_blocks = data.gridData.left_blocks;
         this.right_blocks = data.gridData.right_blocks;
@@ -207,15 +206,30 @@ export default class Level extends Phaser.Scene {
     }
 
     generate_instructions(){
-        let currX = 400;
+        let currX = 100;
         let currY = 50;
 
-        for(let i = 0; i < this.start_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "start");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            this.start_instruction = fred;
-            currY += 50;
+        const fred = new Instruction(this, currX, currY, "start");
+        this.add.existing(fred);
+        this.Instructions?.push(fred);
+        this.start_instruction = fred;
+
+        currY += 50;
+
+        const block_counts = [this.up_blocks, this.down_blocks, this.left_blocks, this.right_blocks, this.grab_blocks, this.release_blocks, this.loop_blocks, this.endloop_blocks];
+        const block_types = ["up", "down", "left", "right", "grab", "release", "loop", "endloop"];
+
+        for(let i = 0; i < block_counts.length; i ++) {
+            for(let j = 0; j < block_counts[i]; j++) {
+                const fred = new Instruction(this, currX, currY, block_types[i] as InstructionType);
+                this.add.existing(fred);
+                this.Instructions?.push(fred);
+                currY += 50;
+                if(currY >= 400) {
+                    currX += 100;
+                    currY = 50;
+                }
+            }
         }
 
         for(let i = 0; i < this.number_blocks.length; i++) {
@@ -223,71 +237,10 @@ export default class Level extends Phaser.Scene {
             this.add.existing(fred);
             this.Instructions?.push(fred);
             currY += 50;
-        }
-
-        currX += 100;
-        currY = 50;
-        for(let i = 0; i < this.right_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "right");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            currY += 50;
-        }
-
-        currX += 100;
-        currY = 50;
-        for(let i = 0; i < this.left_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "left");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            currY += 50;
-        }
-
-        for(let i = 0; i < this.down_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "down");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            currY += 50;
-        }
-        
-        currX += 100;
-        currY = 50;
-        for(let i = 0; i < this.release_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "release");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            currY += 50;
-        }
-        
-        for(let i = 0; i < this.loop_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "loop");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            currY += 50;
-        }
-
-        for(let i = 0; i < this.endloop_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "endloop");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            currY += 50;
-        }
-
-        currX += 100;
-        currY = 50;
-
-        for(let i = 0; i < this.grab_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "grab");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            currY += 50;
-        }
-        
-        for(let i = 0; i < this.up_blocks; i++) {
-            const fred = new Instruction(this, currX, currY, "up");
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
-            currY += 50;
+            if(currY >= 400) {
+                currX += 100;
+                currY = 50;
+            }
         }
     }
 
