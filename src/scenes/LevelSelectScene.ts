@@ -63,20 +63,6 @@ export default class LevelSelectScene extends Phaser.Scene {
 	constructor() {
 		super({ key: 'LevelSelectScene' });
 	}
-	preload() {
-        this.load.image('background', 'assets/TempBackground.png');
-        this.load.image('gridSquare', 'assets/GridSquare.png');
-        this.load.image('regCrate', 'assets/RegCrate.png');
-        this.load.image('craneOpen', 'assets/CraneBasicRed.png');
-        this.load.image('craneClosed', 'assets/CraneBasicGreen.png');
-        this.load.image('cranePickupBox', 'assets/CranePickupBox.png');
-        this.load.spritesheet('visibilityButton', 'assets/VisibilityButtons.png', {frameWidth: 48, frameHeight: 32});
-		
-
-		this.load.image('instruction', 'assets/Instruction.png');
-		this.load.image('instruction-loop', 'assets/LoopInstruction.png');
-		this.load.image('instruction-number', 'assets/Instruction-number.png')
-	}
 
 	create() {
 		for (let i = 0; i < this.LEVELS.length; i++) {
@@ -99,7 +85,7 @@ export default class LevelSelectScene extends Phaser.Scene {
 			levelButton.on('pointerdown', () => {
 				console.log(`level ${i} clicked`);
 				
-				this.scene.start(`level`,{levelNumber: i, gridData: this.LEVELS[i], 
+				this.scene.start(`LevelScene`,{levelNumber: i, gridData: this.LEVELS[i], 
 					// blockCount: {"left": 999, "right": 999, "up": 999, "down": 999,
 					//  "close": 999, "open": 999, "loops": 999, "numbers": 999}
 				});

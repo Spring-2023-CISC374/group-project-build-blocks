@@ -13,8 +13,8 @@ import { InstructionType } from '../types/InstructionType';
 export default class Level extends Phaser.Scene {
     
     /* SCENE CONSTANTS */
-    private grid: Grid;
-    private secondaryGrid: Grid;
+    protected grid: Grid;
+    protected secondaryGrid: Grid;
 
     public static readonly P_GRID_START_BOTTOM = 16;
     public static readonly P_GRID_START_LEFT = 16;
@@ -25,34 +25,34 @@ export default class Level extends Phaser.Scene {
     public static readonly S_GRID_START_LEFT = 300;
     public static readonly S_GRID_SQUARE_SIZE = 32;
 
-    private left_blocks = 0;
-    private right_blocks = 0;
-    private up_blocks = 0;
-    private down_blocks = 0;
-    private grab_blocks = 0;
-    private release_blocks = 0;
-    private loop_blocks = 0;
-    private endloop_blocks = 0;
-    private number_blocks = [0];
+    protected left_blocks = 0;
+    protected right_blocks = 0;
+    protected up_blocks = 0;
+    protected down_blocks = 0;
+    protected grab_blocks = 0;
+    protected release_blocks = 0;
+    protected loop_blocks = 0;
+    protected endloop_blocks = 0;
+    protected number_blocks = [0];
 
     /* SCENE VARIABLES */
-    private crates?: Phaser.Physics.Arcade.Group
-    private endCrates?: Phaser.Physics.Arcade.Group
-    private crane: Crane;
-    private start_instruction?: Instruction;
+    protected crates?: Phaser.Physics.Arcade.Group
+    protected endCrates?: Phaser.Physics.Arcade.Group
+    protected crane: Crane;
+    protected start_instruction?: Instruction;
 
-    // private toggleVisibleButton?: Phaser.GameObjects.Text;
-    private score = 0;
+    // protected toggleVisibleButton?: Phaser.GameObjects.Text;
+    protected score = 0;
     public Instructions?: Instruction[];
 
     //the background of the scene
-    private background?: Phaser.GameObjects.Image
+    protected background?: Phaser.GameObjects.Image
 
 
     /* ESSENTIAL FUNCTIONS */
 
-    constructor(){
-		super(`level`);
+    constructor(key = "LevelScene"){
+		super(key);
     }
 
     get getCrane(){
@@ -117,7 +117,7 @@ export default class Level extends Phaser.Scene {
             this.execute(this.InstructionChainToString())
         });
         
-        // create button to for going back to level selection
+        // create button to for going back to menu
         const levelSelectButton = this.add.rectangle(this.sys.game.canvas.width-80, this.sys.game.canvas.height-30, 140, 30, 0x204060, 1);
 
         levelSelectButton.setInteractive();
@@ -127,13 +127,13 @@ export default class Level extends Phaser.Scene {
         levelSelectButton.on('pointerout', () => {
             levelSelectButton.setFillStyle(0x204060, 1);
         });
-        const levelSelectText = this.add.text(this.sys.game.canvas.width-80, this.sys.game.canvas.height-30, `level select`, {
+        const levelSelectText = this.add.text(this.sys.game.canvas.width-80, this.sys.game.canvas.height-30, `main menu`, {
             fontSize: '18px',
             color: '#fff',
         });
         levelSelectText.setOrigin(0.5);
         levelSelectButton.on('pointerdown', () => {
-            this.scene.start(`LevelSelectScene`);
+            this.scene.start(`MainMenuScene`);
         });
 
         // create button for restart level
@@ -171,7 +171,7 @@ export default class Level extends Phaser.Scene {
     }
 
     /* HELPER FUNCTIONS */
-    private checkOverlap(c: Crate, ec:Crate) {
+    protected checkOverlap(c: Crate, ec:Crate) {
         if (c.getColor() !== ec.getColor()) {
             return false;
         }
@@ -181,7 +181,7 @@ export default class Level extends Phaser.Scene {
         return diff < 6;
     }
 
-    private getScore() {
+    protected getScore() {
         this.score = 0;
         this.crates?.getChildren().forEach((c) => {
             this.endCrates?.getChildren().forEach((ec) => {
@@ -194,7 +194,7 @@ export default class Level extends Phaser.Scene {
         }, this)
     }
 
-    private checkWin() {
+    protected checkWin() {
         this.getScore();
         const didWin = this.score === this.grid.maxScore;
         //console.log(this.score)
