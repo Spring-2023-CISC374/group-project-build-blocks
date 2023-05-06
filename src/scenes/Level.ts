@@ -43,7 +43,8 @@ export default class Level extends Phaser.Scene {
 
     // protected toggleVisibleButton?: Phaser.GameObjects.Text;
     protected score = 0;
-    public Instructions?: Instruction[];
+    public Instructions?: Phaser.GameObjects.Container;
+    public currentInstruction?: Instruction;
 
     //the background of the scene
     protected background?: Phaser.GameObjects.Image
@@ -59,6 +60,7 @@ export default class Level extends Phaser.Scene {
         return this.crane;
     }
     init(data:{levelNumber: number, gridData: GridData}) {
+        this.Instructions = new Phaser.GameObjects.Container(this)
         this.grid = new Grid(data.gridData, true, this);
         this.secondaryGrid = new Grid(data.gridData, false, this);
 
@@ -72,6 +74,8 @@ export default class Level extends Phaser.Scene {
         this.endloop_blocks = data.gridData.endloop_blocks;
         this.number_blocks = data.gridData.number_blocks;
         this.createLevel()
+        this.input.on("drag",this.handleDrag,this);
+        this.input.on("drop",this.handleDrop,this);
 	}
 
     createLevel() {
@@ -200,7 +204,8 @@ export default class Level extends Phaser.Scene {
         //console.log(this.score)
         if (didWin) {
             console.log("you win!")
-            this.add.text(400,300,"YOU WIN!");
+            this.add.rectangle(400,300, 200,40, 0x000000);
+            this.add.text(400,300,"YOU WIN!", {fontSize:"18px"}).setOrigin(0.5,0.5);
         }
         return didWin;
     }
@@ -210,8 +215,8 @@ export default class Level extends Phaser.Scene {
         let currY = 50;
 
         const fred = new Instruction(this, currX, currY, "start");
-        this.add.existing(fred);
-        this.Instructions?.push(fred);
+        // this.add.existing(fred);
+        this.Instructions?.add([fred,fred.instructionText]);
         this.start_instruction = fred;
 
         currY += 50;
@@ -222,8 +227,8 @@ export default class Level extends Phaser.Scene {
         for(let i = 0; i < block_counts.length; i ++) {
             for(let j = 0; j < block_counts[i]; j++) {
                 const fred = new Instruction(this, currX, currY, block_types[i] as InstructionType);
-                this.add.existing(fred);
-                this.Instructions?.push(fred);
+                // this.add.existing(fred);
+                this.Instructions?.add([fred,fred.instructionText]);
                 currY += 50;
                 if(currY >= 400) {
                     currX += 100;
@@ -234,14 +239,15 @@ export default class Level extends Phaser.Scene {
 
         for(let i = 0; i < this.number_blocks.length; i++) {
             const fred = new Instruction(this, currX, currY, "number", this.number_blocks[i]);
-            this.add.existing(fred);
-            this.Instructions?.push(fred);
+            // this.add.existing(fred);
+            this.Instructions?.add([fred,fred.instructionText]);
             currY += 50;
             if(currY >= 400) {
                 currX += 100;
                 currY = 50;
             }
         }
+        this.add.existing(this.Instructions as Phaser.GameObjects.GameObject);
     }
 
     InstructionChainToString(){
@@ -268,23 +274,82 @@ export default class Level extends Phaser.Scene {
         const lexer = new BlockLangLexer(chars);
         const tokens = new CommonTokenStream(lexer);
         const parser = new BlockLangParser(tokens);
-        // let _error = "";
-        // lexer.removeErrorListeners();
-        // lexer.addErrorListener({
-        //     syntaxError: (_recognizer, _offendingSymbol, line, column, msg, _e) => {
-        //         _error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
-        //     }
-        // });
-        // parser.buildParseTrees = true;
-        // parser.removeErrorListeners();
-        // parser.addErrorListener({
-        //     syntaxError: (_recognizer, _offendingSymbol, line, column, msg, _e) => {
-        //         _error += `Error: ${msg} at line ${line} and column ${column}. <br>`;
-        //     }
-        // });
         const tree = parser.program();
         const visitor = new BlockVisitor(null, this);
         console.log(visitor.visit(tree));
-        // console.log(formatParseTree(tree.toStringTree(null, parser)));
+    }
+    
+    // when this is called from other scenes it will pass these values    
+    handleDrag(_mouse: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) {
+
+        if (!(gameObject instanceof Instruction)) {
+            console.log(gameObject) // this should never happen as non of the other object are dragable
+            return;
+        }
+        
+        this.currentInstruction = gameObject;
+
+        // bring gameobject (instruction) to bottom of all instructions
+        this.Instructions?.sendToBack(gameObject);
+
+        // console.log(gameObject)
+        // removes parent relationship from the linked list segment when dragged
+        if(gameObject.previousInstruction){
+            if(gameObject.instructionType === "number"){
+                gameObject.previousInstruction.loopChild = undefined;
+            }
+            else {
+                gameObject.previousInstruction.nextInstruction = undefined;
+            }
+            
+            gameObject.previousInstruction.dropArea = gameObject.previousInstruction.dropAreaLarge;
+            gameObject.previousInstruction = undefined;
+            
+        }
+
+        gameObject.moveInstruction(dragX, dragY);
+
+        // gameObject.instructionText.depth = 999;
+    }    
+    
+    handleDrop(_mouse: Phaser.Input.Pointer, dragTarget: Phaser.GameObjects.GameObject, dropTarget: Phaser.GameObjects.GameObject) {
+        if(!(dropTarget instanceof Instruction) || !(dragTarget instanceof Instruction)){
+            return;
+        }
+        
+        //when im dropped on something that is an instruction, isn't me, and isn't a number
+        if(dropTarget instanceof Instruction && dropTarget !== dragTarget && dropTarget.instructionType !== "number"){
+
+                //number specific dropping
+                if(dragTarget.instructionType === "number") {
+
+                    //numbers can only be dropped into loops and loops should be empty
+                    if(dropTarget.instructionType === "loop" && dropTarget.loopChild === undefined) {
+                        
+                        //adds it the list
+                        dragTarget.previousInstruction = dropTarget;
+                        dragTarget.previousInstruction.loopChild = dragTarget;
+
+                        //moves the number that was dropped into place
+                        dragTarget.moveInstruction(dragTarget.previousInstruction.x + 13, dragTarget.previousInstruction.y - 4);
+
+                        //brings the number in the loop into place
+                        this.Instructions?.bringToTop(dragTarget);
+                        this.Instructions?.bringToTop(dragTarget.instructionText);
+                        
+                        // dropTarget.dropArea = dropTarget.dropAreaSmall;
+                    }
+                    
+                    dragTarget.dropArea = dragTarget.dropAreaSmall;
+                }
+            
+            //inserts this instruction into the linked list standard flow
+            else if(dragTarget.previousInstruction === undefined && dropTarget.nextInstruction === undefined) {
+                dragTarget.previousInstruction = dropTarget;
+                dropTarget.nextInstruction = dragTarget;
+                dragTarget.snapIntoPlace();
+                dropTarget.dropArea = dropTarget.dropAreaSmall;
+            }
+        }
     }
 }

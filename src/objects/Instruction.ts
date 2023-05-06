@@ -1,6 +1,7 @@
 //stolen from prof Wassil's refactor homework
 
 import { InstructionType } from "../types/InstructionType";
+import Level from "../scenes/Level";
 
 export default class Instruction extends Phaser.GameObjects.Image {
 
@@ -13,6 +14,11 @@ export default class Instruction extends Phaser.GameObjects.Image {
 
     public nextInstruction?: Instruction;
     public previousInstruction?: Instruction;
+    
+    public dropAreaLarge: Phaser.Geom.Rectangle;
+    public dropAreaSmall: Phaser.Geom.Rectangle;
+    public dropArea: Phaser.Geom.Rectangle;
+    public beingDragged: boolean = false;
 
     constructor(scene: Phaser.Scene, x: number, y: number, instructionType: InstructionType, number?: number) {
         
@@ -20,138 +26,126 @@ export default class Instruction extends Phaser.GameObjects.Image {
         if(instructionType === "number" && number) {
             super(scene, x, y, "instruction-number");
             this.loopNumber = number;
-            this.instructionText = scene.add.text(x - 6, y - 9, number.toString(), {color: "black", fontSize: "18px", align: "left"});
-            this.instructionText.depth = 999;
         }
         //loop instructions have a different sprite
         else if(instructionType === "loop") {
             super(scene, x, y, "instruction-loop");
-            this.instructionText = scene.add.text(x - 44, y - 13, instructionType, {color: "black", fontSize: "18px", align: "left"});
-            this.instructionText.depth = 999;
         }
         else {
             super(scene, x, y, "instruction");
-            this.instructionText = scene.add.text(x - 44, y - 13, instructionType, {color: "black", fontSize: "18px", align: "left"});
-            this.instructionText.depth = 999;
         }
 
-        this.instructionType = instructionType;      
+        this.instructionText = scene.make.text({x: x, y: y,
+             text: instructionType === "number" && number?number.toString():instructionType, 
+             style: {color: "black", fontSize: "18px", fixedWidth: this.width, padding: instructionType === "number" && number?{x: 10, y: 0}:{x: 5, y: 0}},
+            }).setOrigin(0.5,0.5);
 
-        //enable drag
+        this.instructionType = instructionType; 
+        this.dropAreaLarge = new Phaser.Geom.Rectangle(0, 0, this.width, this.height*2);
+        this.dropAreaSmall = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
+        this.dropArea = this.dropAreaLarge;
+
         this.setInteractive();
         scene.input.setDraggable(this);
         this.input.dropZone = true;
 
+        this.resetTint();
+
+        this.input.hitAreaCallback = (_hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => {
+            let gameObjectIns = gameObject as Instruction;
+            
+            const alpha = this.scene.textures.getPixelAlpha(x, y, gameObjectIns.texture.key);
+            if(this.nextInstruction !== undefined){
+                return (alpha && alpha > 0);
+            }
+            // console.log((this.scene as Level).currentInstruction);
+            if(scene.input.mousePointer.isDown 
+                && (this.scene as Level).currentInstruction !== gameObjectIns
+                && (this.scene as Level).currentInstruction
+                && (this.scene as Level).currentInstruction!.instructionType !== "number"){
+                    console.log((this.scene as Level).currentInstruction!.instructionType);
+                return Phaser.Geom.Rectangle.Contains(gameObjectIns.dropArea, x, y);
+            }
+            return (alpha && alpha > 0);
+        };
+        
+        
+        
+
         //adds tint effect when hovered over
         this.on('pointerover', () => {
+            this.clearTint();
             this.setTint(0x44ff44);
         });
 
         //removes tint effect when no longer hovered over
         this.on('pointerout', () => {
-            this.clearTint();
+            this.resetTint();
         });
 
-        // input.on  drag event  Pointer triggering event, gameObject, x & y stolen from wassil's phaser-scenes repo
-        scene.input.on('drag', this.handleDrag, this);
-        scene.input.on('drop', this.handleDrop, this);
     }
     
     
+    resetTint(){
+        this.clearTint()
+        switch(this.instructionType) {
+            case "left":
+            case "right":
+            case "up":
+            case "down":
+                this.setTint(0xFFB000); // light gold
+                break;
+            case "release":
+            case "grab":
+                this.setTint(0x648FFF); // light blue
+                break;
+            case "number":
+                this.setTint(0x785EF0); // light purple
+                break;
+            case "loop":
+            case "endloop":
+                this.setTint(0xFE6100); // light orange
+                break;
+            case "start":
+                this.setTint(0xDC2664); //light pink
+                break;
+        }
+    }
+
+    showLinks(){
+        if(this.instructionType === "number"){
+            return;
+        }
+        let key = this.instructionType==="loop"? "instruction-loop" : "instruction";
+        if(this.previousInstruction !== undefined){
+            this.setTexture(key+"_linked");
+        }else{
+            this.setTexture(key);
+        }
+    }
     
-    // when this is called from other scenes it will pass these values    
-    handleDrag(_mouse: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) {
-
-        // brings the object being dragged to the bottom because dropping only works when its behind everything for some reason
-        if(this !== gameObject) {
-            this.scene.children.bringToTop(this);
-            if(this.loopChild){
-                this.scene.children.bringToTop(this.loopChild);
-            }
-        }
-
-        // removes parent relationship from the linked list segment when dragged
-        if(this === gameObject){
-            if(this.previousInstruction){
-                if(this.instructionType === "number"){
-                    this.previousInstruction.loopChild = undefined;
-                }
-                else {
-                    this.previousInstruction.nextInstruction = undefined;
-                }
-                this.previousInstruction = undefined;
-            }
-
-            this.moveInstruction(dragX, dragY);
-        }
-        this.instructionText.depth = 999;
-    }    
     
     moveInstruction(dragX: number, dragY: number) {
         this.x = dragX;
         this.y = dragY;
+        this.instructionText.x = dragX;
+        this.instructionText.y = dragY;
 
-        //text offsets for this instruction
-        if(this.instructionType !== "number") {
-            this.instructionText.x = dragX - 44;
-            this.instructionText.y = dragY - 13;
-        }
-        else {
-            this.instructionText.x = dragX - 6;
-            this.instructionText.y = dragY - 18/2;
-        }
-        
-        //if there is a child update it (so that it moves with parent
         if(this.nextInstruction !== undefined) {
             this.nextInstruction.moveInstruction(dragX, dragY + 31);
         }
         if(this.loopChild !== undefined) {
-            this.loopChild.moveInstruction(dragX + 11, dragY - 4);
+            this.loopChild.moveInstruction(dragX + 13, dragY - 4);
         }
+        
+        this.showLinks();
     }
 
     //snaps objects into place relative to their parent
     snapIntoPlace(){
         if(this.previousInstruction){
-            this.moveInstruction(this.previousInstruction.x, this.previousInstruction.y + 31)
+            this.moveInstruction(this.previousInstruction.x, this.previousInstruction.y + 31);
         }
     }
 
-    handleDrop(_mouse: Phaser.Input.Pointer, dragTarget: Phaser.GameObjects.GameObject, dropTarget: Phaser.GameObjects.GameObject) {
-        
-        //keep text on top
-        this.instructionText.depth = 999;
-
-        if(dragTarget === this) {
-            
-            //when im dropped on something that is an instruction, isn't me, and isn't a number
-            if(dropTarget instanceof Instruction && dropTarget !== this && dropTarget.instructionType !== "number"){
-
-                    //number specific dropping
-                    if(this.instructionType === "number") {
-
-                        //numbers can only be dropped into loops and loops should be empty
-                        if(dropTarget.instructionType === "loop" && dropTarget.loopChild === undefined) {
-                            
-                            //adds it the list
-                            this.previousInstruction = dropTarget;
-                            this.previousInstruction.loopChild = this;
-
-                            //moves the number that was dropped into place
-                            this.moveInstruction(this.previousInstruction.x + 11, this.previousInstruction.y - 4);
-
-                            //brings the number in the loop into place
-                            this.scene.children.bringToTop(this);
-                        }
-                    }
-                
-                //inserts this instruction into the linked list standard flow
-                else if(this.previousInstruction === undefined && dropTarget.nextInstruction === undefined) {
-                    this.previousInstruction = dropTarget;
-                    this.previousInstruction.nextInstruction = this;
-                    this.snapIntoPlace();
-                }
-            }
-        }
-    }
 }
