@@ -63,7 +63,6 @@ export default class Instruction extends Phaser.GameObjects.Image {
                 && (this.scene as Level).currentInstruction !== gameObjectIns
                 && (this.scene as Level).currentInstruction
                 && (this.scene as Level).currentInstruction!.instructionType !== "number"){
-                    console.log((this.scene as Level).currentInstruction!.instructionType);
                 return Phaser.Geom.Rectangle.Contains(gameObjectIns.dropArea, x, y);
             }
             return (alpha && alpha > 0);
