@@ -5,9 +5,9 @@ export default class TutorialLevel extends Level {
 
 	tutLevelData: GridData = { width: 5, height: 5,
 		gridObjects: [
-			["none", "none", "none", "none", "crane"],
 			["none", "none", "none", "none", "none"],
 			["none", "none", "none", "none", "none"],
+			["none", "none", "crane", "none", "none"],
 			["none", "none", "none", "none", "none"],
 			["crate-brown", "none", "none", "none", "none"]
 		],
@@ -19,19 +19,30 @@ export default class TutorialLevel extends Level {
 			["none", "none", "crate-brown", "none", "none"]
 		],
 
-		start_blocks: 1,
-		loop_blocks: 2,
-		endloop_blocks: 2,
-		left_blocks: 6,
-		right_blocks: 6,
-		down_blocks: 6,
-		up_blocks: 6,
-		grab_blocks: 3,
-		release_blocks: 3,
-		number_blocks: [1, 2, 3, 4],
+		start_blocks: 0,
+		loop_blocks: 0,
+		endloop_blocks: 0,
+		left_blocks: 0,
+		right_blocks: 0,
+		down_blocks: 0,
+		up_blocks: 0,
+		grab_blocks: 0,
+		release_blocks: 0,
+		number_blocks: [],
 	};
 
-	private tutorialTexts: string[] = [`Welcome to the tutorial level!
+	private static start_blocks = 1;
+	private static loop_blocks= 1;
+	private static endloop_blocks= 1;
+	private static left_blocks= 2;
+	private static right_blocks= 1;
+	private static down_blocks= 1;
+	private static up_blocks= 1;
+	private static grab_blocks= 1;
+	private static release_blocks= 1;
+	private static number_blocks= [2];
+
+	private tutorialTexts = [`Welcome to the tutorial level!
 	Arrange the blocks by drag and drop, then click execute to control the crane.
 	Use the close and open block to pick up and drop crates.
 	Press the play button to start the level.
