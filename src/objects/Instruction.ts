@@ -30,6 +30,8 @@ export default class Instruction extends Phaser.GameObjects.Image {
         //loop instructions have a different sprite
         else if(instructionType === "loop") {
             super(scene, x, y, "instruction-loop");
+        } else if(instructionType === "start") {
+            super(scene, x, y, "instruction-start");
         }
         else {
             super(scene, x, y, "instruction");
@@ -112,7 +114,7 @@ export default class Instruction extends Phaser.GameObjects.Image {
     }
 
     showLinks(){
-        if(this.instructionType === "number"){
+        if(this.instructionType === "number" || this.instructionType === "start"){
             return;
         }
         let key = this.instructionType==="loop"? "instruction-loop" : "instruction";

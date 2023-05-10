@@ -13,6 +13,7 @@ export default class MainMenuScene extends Phaser.Scene {
         this.load.spritesheet('visibilityButton', 'assets/VisibilityButtons.png', {frameWidth: 48, frameHeight: 32});
 		
 		this.load.image('instruction', 'assets/Instruction.png');
+		this.load.image('instruction-start', 'assets/StartInstruction.png');
 		this.load.image('instruction_linked', 'assets/Instruction_linked.png');
 		
 		this.load.image('instruction-loop', 'assets/LoopInstruction.png');
