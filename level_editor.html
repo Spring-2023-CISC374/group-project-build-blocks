@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Level Editor</title>
+	<link rel="stylesheet" href="src/styles/level_editor.css">
+</head>
+
+<body>
+	<h1>Level Editor</h1>
+	<div class="grid-size">
+		<label for="width-input">Width:</label>
+		<input type="number" id="width-input" value="5">
+		<label for="height-input">Height:</label>
+		<input type="number" id="height-input" value="5">
+		<button id="resize-button">Resize Grid</button>
+	</div>
+	<!-- side by side -->
+	<div id="grids-container">
+		<div>
+			<h2>Grid Objects</h2>
+			<div id="grid" class="grid"></div>
+		</div>
+		<!-- gap -->
+		<div style="margin: 2%;"></div>
+
+		<div>
+			<h2>Grid Objectives</h2>
+			<div id="objective-grid" class="grid"></div>
+		</div>
+		<!-- gap -->
+		<div style="margin: 3%;"></div>
+
+		<div id="block-counts">
+			<h2>Block Counts</h2>
+			<div>Start Blocks: <input id="start-blocks" type="number"></div>
+			<div>Loop Blocks: <input id="loop-blocks" type="number"></div>
+			<div>End Loop Blocks: <input id="endloop-blocks" type="number"></div>
+			<div>Left Blocks: <input id="left-blocks" type="number"></div>
+			<div>Right Blocks: <input id="right-blocks" type="number"></div>
+			<div>Down Blocks: <input id="down-blocks" type="number"></div>
+			<div>Up Blocks: <input id="up-blocks" type="number"></div>
+			<div>Grab Blocks: <input id="grab-blocks" type="number"></div>
+			<div>Release Blocks: <input id="release-blocks" type="number"></div>
+		</div>
+	</div>
+
+	</div>
+	<div id="crate-picker" class="crate-picker">
+	</div>
+	<div id="controls">
+		<button id="save-btn">Save Level</button>
+		<button id="load-btn">Load Level</button>
+		<button id="clear-btn">Clear Grid</button>
+		<script type="module" src="src/scripts/level_editor.ts"></script>
+
+</body>
+
+</html>
