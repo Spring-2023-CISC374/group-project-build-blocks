@@ -149,6 +149,7 @@ export default class Grid {
                     case "none":
                         break;
                     case "crane":{
+                        
                         this.crane = new Crane(
                             this.scene, 
                             this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x, 
@@ -222,5 +223,14 @@ export default class Grid {
             this.scene.physics.add.collider(this.crane, crates);
         }
         return crates;
+    }
+
+    public resetGrid() {
+        if (!this.isPrimaryGrid) {
+            return;
+        }
+        this.crane.destroy(true);
+        this.crates?.clear(true, true);
+        this.crates = this.placeBlocks(true);
     }
 }
