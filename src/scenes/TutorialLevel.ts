@@ -45,24 +45,7 @@ export default class TutorialLevel extends Level {
 	protected left2_instruction?: Instruction;
 	protected number_instruction?: Instruction;
 
-	private tutorialTexts = [`Welcome to the tutorial level!
-	Arrange the blocks by drag and drop, then click execute to control the crane.
-	Use the close and open block to pick up and drop crates.
-	Press the play button to start the level.
-	Press the reset button to reset the level.
-	Press the menu button to return to the level select screen.
-	Press the help button to view this help message.
-	
-	Click here to continue.
-	`, `The objective of the game is to move the crates to the objective tiles.*	
-	Use the crane to move crate (opaque) to the objective tile (semi-transparent)
-	 using the text (code) blocks.
-	Now drag and drop the code blocks to the Start block and solve this level. :)
 
-	Click here to dismiss this text.`
-
-
-] // TODO: add more tutorial text?
 
     constructor(){
 		super(`TutorialLevelScene`);
@@ -75,11 +58,63 @@ export default class TutorialLevel extends Level {
 
 	create(){
 		// add dismissable text for tutorial
-		const tutorial = this.add.text(400, 300, this.tutorialTexts.shift()!,
-		{fontFamily: 'Arial', fontSize: "24px", color: '#FFFFFF', align: 'center', backgroundColor: "black"}).setOrigin(0.5, 0.5);
+
+		const tutorialTexts = [`Welcome to the tutorial level!
+
+		Below this text are two grids, the left grid is the actual play area
+		The right grid is what you need to make the play area look like
+	
+		Click here to continue.
+		`, 
+		`
+		Inside the play grid are crates and a crane.
+	
+		You can control the crane by dragging and dropping instructions in a list.
+	
+		The instructions will be done from top to bottom starting with the start block.
+	
+		Click here to continue.
+		`,
+		`left, down, up, and right move the crane one tile in that direction.
+	
+		grab blocks attach the crate directly below the crane to the crane.
+	
+		release drops whatever crate the crane is currently holding.
+	
+		Click here to continue
+		`,
+		`
+		loop and endloop instructions are special.
+	
+		Every loop needs a number and an endloop.
+	
+		numbers go in the loop block and endloops come after.
+	
+		every instruction between the loop and endloop is done multiple times 
+		equal to the number in the loop block.
+	
+		Click here to continue.
+		`,
+		`
+		Complete the level by arranging the instructions after start.
+	
+		Click the execute button to make the crane follow instructions.
+	
+		Click restart to restart the level.
+	
+		Click main menu to go back to the main menu.
+	
+		Good luck!
+	
+		Click here to dismiss this text.
+		`
+	]
+
+		const tutorial = this.add.text(400, 300, tutorialTexts.shift()!,
+		{fontFamily: 'Arial', fontSize: "24px", color: '#FFFFFF', align: 'center', backgroundColor: "black", fixedWidth:this.game.canvas.width}).setOrigin(0.5, 0.5);
 		tutorial.setInteractive();
 		tutorial.on('pointerdown', () => {
-			const tutorialText = this.tutorialTexts.shift();
+			const tutorialText = tutorialTexts.shift();
 			if(tutorialText){
 				tutorial.setText(tutorialText);
 			} else{
