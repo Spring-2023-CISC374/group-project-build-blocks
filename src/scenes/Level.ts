@@ -142,22 +142,24 @@ export default class Level extends Phaser.Scene {
             this.scene.start(`MainMenuScene`);
         });
 
-        // create button for restart level
-        const restartButton = this.add.rectangle(this.sys.game.canvas.width-80, this.sys.game.canvas.height-80, 140, 30, 0x204060, 1);
-        restartButton.setInteractive();
-        restartButton.on('pointerover', () => {
-            restartButton.setFillStyle(0x204060, 0.6);
+        // create button for reset level
+        const resetButton = this.add.rectangle(this.sys.game.canvas.width-80, this.sys.game.canvas.height-80, 140, 30, 0x204060, 1);
+        resetButton.setInteractive();
+        resetButton.on('pointerover', () => {
+            resetButton.setFillStyle(0x204060, 0.6);
         });
-        restartButton.on('pointerout', () => {
-            restartButton.setFillStyle(0x204060, 1);
+        resetButton.on('pointerout', () => {
+            resetButton.setFillStyle(0x204060, 1);
         });
-        const restartText = this.add.text(this.sys.game.canvas.width-80, this.sys.game.canvas.height-80, `restart`, {
+        const resetText = this.add.text(this.sys.game.canvas.width-80, this.sys.game.canvas.height-80, `reset`, {
             fontSize: '18px',
             color: '#fff',
         });
-        restartText.setOrigin(0.5);
-        restartButton.on('pointerdown', () => {
-            this.scene.restart();
+        resetText.setOrigin(0.5);
+        resetButton.on('pointerdown', () => {
+            this.grid.resetGrid();
+            this.crates = this.grid.crates;
+            this.crane = this.grid.crane;
         });
     }
 
