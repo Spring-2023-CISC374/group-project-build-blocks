@@ -25,6 +25,7 @@ export default class Level extends Phaser.Scene {
     public static readonly S_GRID_START_LEFT = 300;
     public static readonly S_GRID_SQUARE_SIZE = 32;
 
+    protected start_blocks = 0;
     protected left_blocks = 0;
     protected right_blocks = 0;
     protected up_blocks = 0;
@@ -64,6 +65,7 @@ export default class Level extends Phaser.Scene {
         this.grid = new Grid(data.gridData, true, this);
         this.secondaryGrid = new Grid(data.gridData, false, this);
 
+        this.start_blocks = data.gridData.start_blocks;
         this.up_blocks = data.gridData.up_blocks;
         this.left_blocks = data.gridData.left_blocks;
         this.right_blocks = data.gridData.right_blocks;
@@ -216,13 +218,14 @@ export default class Level extends Phaser.Scene {
         let currX = 100;
         let currY = 50;
 
-        const fred = new Instruction(this, currX, currY, "start");
-        // this.add.existing(fred);
-        this.Instructions?.add([fred,fred.instructionText]);
-        this.start_instruction = fred;
+        if(this.start_blocks > 0) {
+            const fred = new Instruction(this, currX, currY, "start");
+            // this.add.existing(fred);
+            this.Instructions?.add([fred,fred.instructionText]);
+            this.start_instruction = fred;
 
-        currY += 50;
-
+            currY += 50;
+        }
         const block_counts = [this.up_blocks, this.down_blocks, this.left_blocks, this.right_blocks, this.grab_blocks, this.release_blocks, this.loop_blocks, this.endloop_blocks];
         const block_types = ["up", "down", "left", "right", "grab", "release", "loop", "endloop"];
 

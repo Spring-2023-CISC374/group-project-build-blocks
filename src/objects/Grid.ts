@@ -154,7 +154,7 @@ export default class Grid {
                             this.scene, 
                             this.gridVars.GRID_START_LEFT + this.gridVars.GRID_SQUARE_SIZE*x, 
                             (this.scene.sys.game.canvas.height - this.gridVars.GRID_START_BOTTOM) - this.gridVars.GRID_SQUARE_SIZE*y,  
-                            false
+                            true
                         );
                         break;
                     }
