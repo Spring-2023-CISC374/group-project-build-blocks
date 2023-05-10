@@ -8,9 +8,9 @@ export default class LevelSelectScene extends Phaser.Scene {
 	/* SCENE CONSTANTS */
 	private LEVELS: Array<GridData> = [{ width: 5, height: 5,
 		gridObjects: [
-			["none", "none", "none", "none", "crane"],
 			["none", "none", "none", "none", "none"],
 			["none", "none", "none", "none", "none"],
+			["none", "none", "crane", "none", "none"],
 			["none", "none", "none", "none", "none"],
 			["crate-brown", "crate-brown", "crate-brown", "none", "none"]
 		],
@@ -23,19 +23,19 @@ export default class LevelSelectScene extends Phaser.Scene {
 		],
 
 		start_blocks: 1,
-		loop_blocks: 2,
-		endloop_blocks: 2,
-		left_blocks: 6,
-		right_blocks: 6,
-		down_blocks: 6,
-		up_blocks: 6,
-		grab_blocks: 3,
-		release_blocks: 3,
-		number_blocks: [1, 2, 3, 4],
+		loop_blocks: 0,
+		endloop_blocks: 0,
+		left_blocks: 3,
+		right_blocks: 3,
+		down_blocks: 2,
+		up_blocks: 3,
+		grab_blocks: 2,
+		release_blocks: 2,
+		number_blocks: [],
 
 	}, { width: 5, height: 5,
 		gridObjects: [
-			["none", "none", "none", "none", "crane"],
+			["none", "none", "crane", "none", "none"],
 			["none", "none", "none", "none", "none"],
 			["none", "none", "none", "none", "crate-red"],
 			["crate-green", "crate-red", "crate-blue", "none", "crate-blue"],
