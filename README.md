@@ -1,4 +1,23 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=10563101&assignment_repo_type=AssignmentRepo)
-# group-game-project
+# Build Blocks
 
-This assignment is where you will submit your code for your MVP as well as the rest of the versions of your educational game.
+Build Blocks is an educational game designed to teach inexperienced programmers how to make basic algorithms and use loops
+
+The game teaches the player these fundamentals through its levels which require the player to create instructions for a crane to move crates into the correct positions
+
+## Live Game
+Play the game for free in your browser at: https://spring-2023-cisc374.github.io/group-project-build-blocks/
+
+## Technologies Used
+- Phaser 3
+- Node.js
+- Node Package Manager
+- Typescript
+- Git and GitHub (For version control)
+- GitHub Pages (For live deployment)
+
+## Installation and Usage
+1. Clone the repository: `git clone https://github.com/Spring-2023-CISC374/group-project-build-blocks.git`
+2. Navigate into the repository: `cd group-project-build-blocks/`
+3. Install dependencies: `npm i`
+4. Run a local version of the site: `npm run start`
+5. Navigate to: `http://localhost:8000/group-project-build-blocks/`

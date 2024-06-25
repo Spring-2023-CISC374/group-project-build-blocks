@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>My Phaser 3 Game</title>
+	<!-- https://coder-coder.com/display-divs-side-by-side/ -->
+	<style>
+		.flex-container {
+			display: flex;
+		}
+
+		.flex-child {
+			flex: 1;
+			border: 2px solid yellow;
+		}  
+
+		.flex-child:first-child {
+			margin-right: 20px;
+		} 
+	</style>
+</head>
+
+<body>
+	
+	<!-- side by side iframe and app div using flex container -->
+	<div class="flex-container">
+		<div class="flex-child" id="app"></div>
+		
+		<iframe class="flex-child" id="editor" src="editor.html" align="right"></iframe>
+	</div>
+
+	<script type="module" src="./src/main.ts"></script>
+</body>
+
+</html>

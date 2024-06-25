@@ -1,0 +1,1 @@
+export type Color = "brown" | "red" | "blue" | "green";
